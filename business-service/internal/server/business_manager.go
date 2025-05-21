@@ -1,11 +1,12 @@
 package server
 
 import (
-	"business-service/internal/client/grpc"
+	"business-service/internal/client/grpc/log"
+	blm "business-service/internal/server/handlers"
 )
 
-func newBusinessLogicManager(logClient *grpc.LogClient) *BusinessLogicManager {
-	return &BusinessLogicManager{
-		logClient: logClient,
+func newBusinessLogicManager(logClient *log.LogClient) *blm.BusinessLogicManager {
+	return &blm.BusinessLogicManager{
+		GRPCClient: logClient,
 	}
 }

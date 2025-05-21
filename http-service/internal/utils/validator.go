@@ -45,7 +45,6 @@ func generalValidation(r *http.Request) ([]byte, error) {
 		return nil, errors.New("invalid JSON")
 	}
 
-	// Восстанавливаем тело, чтобы его можно было повторно прочитать
 	r.Body = io.NopCloser(bytes.NewBuffer(body))
 
 	return body, nil

@@ -12,9 +12,9 @@ func NewLogManager() *lm.LogManager {
 	return &lm.LogManager{
 		//logs: make(map[string]*gen.LogEntry),
 		Loggers: map[string]*zap.Logger{
-			"HTTP-service":      createLogger("http"),
-			"business-service":  createLogger("business"),
-			"undefined-service": createLogger("undefined"),
+			"HTTP-server":      createLogger("http"),
+			"business-server":  createLogger("business"),
+			"undefined-server": createLogger("undefined"),
 		},
 	}
 }

@@ -2,9 +2,11 @@ package CRUD
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"go.uber.org/zap"
-	gen "log-service/gen/logger"
+	"google.golang.org/protobuf/encoding/protojson"
+	"log-service/gen"
 	"log-service/internal/utils"
 	"time"
 )
@@ -30,7 +32,7 @@ func (lm *LogManager) HandleIncomingLog(ctx context.Context, entry *gen.LogEntry
 
 	logger, ok := lm.Loggers[entry.ServiceName]
 	if !ok {
-		logger = lm.Loggers["undefined-service"]
+		logger = lm.Loggers["undefined-server"]
 	}
 
 	WriteLogToFile(logger, entry.GetLevel(), id.GetId(), entry)
@@ -49,9 +51,17 @@ func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogE
 
 	formattedDelay := fmt.Sprintf("%.3f ms", delay)
 
+	msgJSON, err := protojson.Marshal(entry.Message)
+	if err != nil {
+		msgJSON = []byte(fmt.Sprintf(`"error serializing message: %v"`, err))
+	}
+
+	fmt.Println(string(msgJSON))
+
 	logFields := []zap.Field{
 		zap.String("id", id),
-		zap.String("message", entry.Message),
+		zap.Any("message", json.RawMessage(msgJSON)),
+		zap.String("path", entry.Message.GetPath()),
 		zap.String("source", entry.ServiceName),
 		zap.Int64("timestamp_send", sendTs),
 		zap.Int64("timestamp_received", receiveTs),

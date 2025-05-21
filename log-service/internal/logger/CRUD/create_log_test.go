@@ -105,18 +105,18 @@ func TestHandleIncomingLog(t *testing.T) {
 
 	tests := []testCase{
 		{
-			name:         "Known service",
-			serviceName:  "HTTP-service",
-			expectLogger: "HTTP-service",
+			name:         "Known server",
+			serviceName:  "HTTP-server",
+			expectLogger: "HTTP-server",
 		},
 		{
-			name:         "Unknown service uses fallback",
+			name:         "Unknown server uses fallback",
 			serviceName:  "UnknownService",
-			expectLogger: "undefined-service",
+			expectLogger: "undefined-server",
 		},
 		{
 			name:         "Context cancelled",
-			serviceName:  "HTTP-service",
+			serviceName:  "HTTP-server",
 			expectErr:    true,
 			ctxCancelled: true,
 		},
@@ -127,7 +127,7 @@ func TestHandleIncomingLog(t *testing.T) {
 			bufs := make(map[string]*bytes.Buffer)
 			loggers := make(map[string]*zap.Logger)
 
-			for _, svc := range []string{"HTTP-service", "undefined-service"} {
+			for _, svc := range []string{"HTTP-server", "undefined-server"} {
 				buf := &bytes.Buffer{}
 				bufs[svc] = buf
 

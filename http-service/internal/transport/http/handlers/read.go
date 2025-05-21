@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	gen "http-service/gen/logger"
+	gen "http-service/gen"
 	"http-service/internal/app"
 	"net/http"
 )
@@ -15,24 +15,24 @@ func ReadLogHandler(clients *app.Clients) httprouter.Handle {
 		filename := r.URL.Query().Get("filename")
 
 		if id == "" || filename == "" {
-			writeJSONError(w, false, http.StatusBadRequest, "Missing query parameters", "id and filename are required")
+			writeJSON(w, http.StatusBadRequest, "Missing query parameters: id and filename are required")
 			return
 		}
 
 		readLogResponse, err := clients.LogClient.ReadLogGRPC(id, filename)
 		if err != nil {
-			writeJSONError(w, readLogResponse.GetSuccess(), http.StatusInternalServerError, "Failed to retrieve log due to server mailfunction", err.Error())
+			writeJSON(w, http.StatusInternalServerError, "Failed to retrieve log due to server mailfunction: "+err.Error())
 			return
 		}
 
 		if !readLogResponse.GetSuccess() {
-			writeJSONError(w, readLogResponse.GetSuccess(), http.StatusInternalServerError, "Failed to retrive log", readLogResponse.GetError())
+			writeJSON(w, http.StatusInternalServerError, "Failed to retrive log: "+readLogResponse.GetError())
 			return
 		}
 
 		readLogResponseJSON, err := parseReadResponse(readLogResponse)
 		if err != nil {
-			writeJSONError(w, readLogResponse.GetSuccess(), http.StatusInternalServerError, "Failed to marshal log:", err.Error())
+			writeJSON(w, http.StatusInternalServerError, "Failed to marshal log: "+err.Error())
 			return
 		}
 
@@ -42,33 +42,50 @@ func ReadLogHandler(clients *app.Clients) httprouter.Handle {
 
 }
 
-func parseReadResponse(readLogResponse *gen.LogReadingResponse) (responseBytes []byte, err error) {
-
+func parseReadResponse(readLogResponse *gen.LogReadingResponse) ([]byte, error) {
 	var logEntry LogEntry
 
-	if readLogResponse.GetSuccess() && readLogResponse.Log != "" {
-		err = json.Unmarshal([]byte(readLogResponse.Log), &logEntry)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse nested log entry: %w", err)
-		}
-	}
-
-	response := ReadResponse{
-		Success: readLogResponse.GetSuccess(),
-		Log:     logEntry,
-	}
-
-	if !readLogResponse.GetSuccess() {
-		response.Error = readLogResponse.GetError()
-	}
-
-	responseBytes, err = json.Marshal(response)
+	err := json.Unmarshal([]byte(readLogResponse.Log), &logEntry)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal final response: %w", err)
+		return nil, fmt.Errorf("failed to parse nested log entry: %w", err)
 	}
-	fmt.Println(response)
-	return responseBytes, nil
 
+	var parsedMessage interface{}
+	err = json.Unmarshal(logEntry.Message, &parsedMessage)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse nested message JSON: %w", err)
+	}
+
+	type LogResponse struct {
+		Level             string      `json:"level"`
+		Msg               string      `json:"msg"`
+		Id                string      `json:"id"`
+		Message           interface{} `json:"message"`
+		Source            string      `json:"source"`
+		TimestampSend     int64       `json:"timestamp_send"`
+		TimestampReceived int64       `json:"timestamp_received"`
+		DeliveryDelayMs   string      `json:"deliveryDelayMs"`
+	}
+
+	response := struct {
+		Success bool        `json:"success"`
+		Log     LogResponse `json:"log,omitempty"`
+		Error   string      `json:"error,omitempty"`
+	}{
+		Success: true,
+		Log: LogResponse{
+			Level:             logEntry.Level,
+			Msg:               logEntry.Msg,
+			Id:                logEntry.ID,
+			Message:           parsedMessage,
+			Source:            logEntry.Source,
+			TimestampSend:     logEntry.TimestampSend,
+			TimestampReceived: logEntry.TimestampRecv,
+			DeliveryDelayMs:   logEntry.DeliveryDelayMs,
+		},
+	}
+
+	return json.Marshal(response)
 }
 
 type ReadResponse struct {

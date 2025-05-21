@@ -13,25 +13,25 @@ func DeleteLogHandler(clients *app.Clients) httprouter.Handle {
 		filename := r.URL.Query().Get("filename")
 
 		if id == "" || filename == "" {
-			writeJSONError(w, false, http.StatusBadRequest, "Missing query parameters", "id and filename are required")
+			writeJSON(w, http.StatusBadRequest, "Missing query parameters: id and filename are required")
 			return
 		}
 
 		deleteResponse, err := clients.LogClient.DeleteLogGRPC(id, filename)
 
 		if err != nil {
-			writeJSONError(w, deleteResponse.GetSuccess(), http.StatusInternalServerError, "Failed to delete log due to server mailfunction", err.Error())
+			writeJSON(w, http.StatusInternalServerError, "Failed to delete log due to server mailfunction: "+err.Error())
 			return
 		}
 
 		if !deleteResponse.GetSuccess() {
-			writeJSONError(w, deleteResponse.GetSuccess(), http.StatusInternalServerError, "Failed to delete log", deleteResponse.Message)
+			writeJSON(w, http.StatusInternalServerError, "Failed to delete log: "+deleteResponse.Message)
 			return
 		}
 
 		deleteLogResponseJSON, err := json.Marshal(deleteResponse)
 		if err != nil {
-			writeJSONError(w, deleteResponse.GetSuccess(), http.StatusInternalServerError, "Failed to marshal log:", err.Error())
+			writeJSON(w, http.StatusInternalServerError, "Failed to marshal log: "+err.Error())
 			return
 		}
 

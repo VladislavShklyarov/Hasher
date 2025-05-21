@@ -1,7 +1,7 @@
-package grpc
+package log
 
 import (
-	gen "business-service/gen/logger"
+	"business-service/gen"
 	"context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,7 +17,7 @@ func CreateLogClient() *LogClient {
 	conn, err := grpc.NewClient("Localhost:9090", grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
-		log.Fatalf("failed to connect to log service: %v", err)
+		log.Fatalf("failed to connect to log server: %v", err)
 	}
 
 	client := &LogClient{
@@ -27,7 +27,7 @@ func CreateLogClient() *LogClient {
 	resp, err := LogHandshake(client)
 
 	if err != nil {
-		log.Fatalf("log service connected, but test message failed: %v", err)
+		log.Fatalf("log server connected, but test message failed: %v", err)
 	}
 	log.Printf("Handshake successful, log ID: %v", resp.GetId())
 
@@ -41,9 +41,32 @@ func LogHandshake(client *LogClient) (*gen.LogCreationResponse, error) {
 
 	testEntry := &gen.LogEntry{
 		TimestampSend: time.Now().UnixMilli(),
-		Message:       "Test handshake log",
-		ServiceName:   "business-service",
-		Level:         "DEBUG",
+		Message: &gen.StructuredMessage{
+			Method: "POST",
+			Path:   "/process",
+			Body: []*gen.Operation{
+				{
+					Type:  "Test type",
+					Op:    "Test operation",
+					Var:   "Test variable",
+					Left:  "Test Left",
+					Right: "Test Right",
+				},
+			},
+			Result: &gen.OperationResponse{
+				Items: []*gen.VariableValue{
+					{
+						Var:   "Test var",
+						Value: 999,
+					},
+				},
+			},
+		},
+		Metadata: map[string]string{
+			"test": "true",
+		},
+		ServiceName: "business-server",
+		Level:       "DEBUG",
 	}
 
 	return client.LoggerClient.HandleIncomingLog(ctx, testEntry)

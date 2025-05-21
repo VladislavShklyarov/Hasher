@@ -3,7 +3,7 @@ package server
 import (
 	"google.golang.org/grpc"
 	"log"
-	gen "log-service/gen/logger"
+	"log-service/gen"
 	"net"
 )
 
@@ -13,7 +13,7 @@ func RunLogServer() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	log.Println("Starting log service on :9090")
+	log.Println("Starting log server on :9090")
 	if err := StartGRPCServer(lis, NewLogManager()); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

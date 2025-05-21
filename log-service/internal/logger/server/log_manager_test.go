@@ -13,7 +13,7 @@ func TestNewLogManager(t *testing.T) {
 	}{
 		{
 			name:          "default loggers and directory created",
-			expectLoggers: []string{"HTTP-service", "business-service", "undefined-service"},
+			expectLoggers: []string{"HTTP-server", "business-server", "undefined-server"},
 			expectDir:     "../log_files",
 		},
 	}
@@ -43,11 +43,11 @@ func TestNewLogManager(t *testing.T) {
 			for _, key := range tt.expectLoggers {
 				filename := ""
 				switch key {
-				case "HTTP-service":
+				case "HTTP-server":
 					filename = tt.expectDir + "/http_logs.json"
-				case "business-service":
+				case "business-server":
 					filename = tt.expectDir + "/business_logs.json"
-				case "undefined-service":
+				case "undefined-server":
 					filename = tt.expectDir + "/undefined_logs.json"
 				}
 				_, err := os.Stat(filename)

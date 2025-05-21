@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"http-service/internal/app"
-	grpcClient "http-service/internal/client/grpc/business"
-	logClient "http-service/internal/client/grpc/log"
-	"http-service/internal/service"
+	grpcBiz "http-service/internal/client/grpc/business"
+	grpcLog "http-service/internal/client/grpc/log"
+	"http-service/internal/server"
 	_ "http-service/internal/transport/http"
 	"log"
 	"net/http"
@@ -20,21 +20,19 @@ import (
 // @description	This is a sample server celler server
 // @termOfService	http://swagger.io/terms
 func main() {
-	loggerClient := logClient.CreateLogClient()
-	businessClient := grpcClient.CreateBusinessClient()
 
 	clients := &app.Clients{
-		LogClient:      loggerClient,
-		BusinessClient: businessClient,
+		LogClient:      grpcLog.CreateLogClient(),
+		BusinessClient: grpcBiz.CreateBusinessClient(),
 	}
 
-	go service.RunHttpServer(clients)
+	go server.RunHttpServer(clients)
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	<-stop
 
-	log.Println("Shutting down service...")
+	log.Println("Shutting down server...")
 }
 
 // ProcessDataHandler обрабатывает POST запрос для отправки данных и их логирования.
@@ -66,7 +64,7 @@ func main() {
 //	@Failure		400			{object}	ErrorResponse	"Missing query parameters"
 //	@Failure		500			{object}	ErrorResponse	"Failed to retrieve or marshal log"
 //	@Router			/getLog [get]
-func ReadLogHandler(LogClient *logClient.LogClient) httprouter.Handle {
+func ReadLogHandler(LogClient *grpcLog.LogClient) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		id := r.URL.Query().Get("id")
 		filename := r.URL.Query().Get("filename")
@@ -122,7 +120,7 @@ type ErrorResponse struct {
 //	@Failure		400			{object}	ErrorResponse	"Missing query parameters"
 //	@Failure		500			{object}	ErrorResponse	"Internal server error"
 //	@Router			/deleteLog [delete]
-func DeleteLogHandler(LogClient *logClient.LogClient) httprouter.Handle {
+func DeleteLogHandler(LogClient *grpcLog.LogClient) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		id := r.URL.Query().Get("id")
 		filename := r.URL.Query().Get("filename")

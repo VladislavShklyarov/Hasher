@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	gen "log-service/gen/logger"
+	"log-service/gen"
 	"path/filepath"
 
 	"os"

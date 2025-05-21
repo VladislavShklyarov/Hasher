@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package gen;
+
+option go_package = ".";
+
+
+message VariableValue {
+  string var = 1;
+  int64 value = 2;
+}
+
+
+message StructuredMessage {
+  string method = 1;
+  string path = 2;
+  repeated Operation body = 3;
+  OperationResponse  result = 4;
+}
+
+
+message Operation {
+  string type = 1;
+  string op = 2;
+  string var = 3;
+  string left = 4;
+  string right = 5;
+}
+
+message LogEntry {
+  string service_name = 1;
+  string level = 2;
+  StructuredMessage message = 3;
+  map<string, string> metadata = 4;
+  int64 timestamp_send = 5;
+}
+
+message LogID {
+  string id =1;
+}
+
+message Nothing {
+  bool dummy = 1;
+}
+
+message LogInfo {
+  string filename = 1;
+  string id = 2;
+}
+
+message LogDeletionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message LogCreationResponse {
+  LogID id = 1;
+  string message = 2;
+}
+
+message LogReadingResponse {
+  bool success = 1;
+  string log = 2;
+  string error = 3;
+
+}
+
+
+service Logger {
+  rpc HandleIncomingLog(LogEntry) returns (LogCreationResponse);
+  rpc DeleteLog(LogInfo) returns (LogDeletionResponse);
+  rpc ReadLog(LogInfo) returns(LogReadingResponse);
+}
+
+message OperationRequest {
+  LogID LogID = 1;
+  repeated Operation operations = 2;
+}
+
+message OperationResponse {
+  LogID LogID = 1;
+  repeated VariableValue items = 2;
+  optional string warning = 3;
+}
+
+service BusinessLogic {
+  rpc Process(OperationRequest) returns (OperationResponse);
+}

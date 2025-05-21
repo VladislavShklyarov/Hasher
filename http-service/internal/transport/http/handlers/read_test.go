@@ -34,7 +34,7 @@ func TestParseReadResponse(t *testing.T) {
 				"msg":"New log entry",
 				"id":"abc123",
 				"message":"Hello, world!",
-				"source":"test-service",
+				"source":"test-server",
 				"timestamp_send":111,
 				"timestamp_received":222,
 				"deliveryDelayMs":"1.000 ms"
@@ -46,7 +46,7 @@ func TestParseReadResponse(t *testing.T) {
 					Msg:             "New log entry",
 					ID:              "abc123",
 					Message:         "Hello, world!",
-					Source:          "test-service",
+					Source:          "test-server",
 					TimestampSend:   111,
 					TimestampRecv:   222,
 					DeliveryDelayMs: "1.000 ms",
@@ -62,7 +62,7 @@ func TestParseReadResponse(t *testing.T) {
 				"msg":"New log entry",
 				"id":"abc123",
 				"message":"Hello, world!",
-				"source":"test-service",
+				"source":"test-server",
 				"timestamp_send":111,
 				"timestamp_received":222,
 				"deliveryDelayMs":
@@ -151,7 +151,7 @@ func TestReadLogHandler(t *testing.T) {
 	"msg": "Log message",
 	"id": "123",
 	"message": "This is a test log",
-	"source": "http-service",
+	"source": "http-server",
 	"timestamp_send": 1620000000,
 	"timestamp_received": 1620000001,
 	"deliveryDelayMs": "1"

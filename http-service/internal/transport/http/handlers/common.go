@@ -2,25 +2,27 @@ package handlers
 
 import (
 	"encoding/json"
-	gen "http-service/gen/logger"
+	gen "http-service/gen"
 	"net/http"
 )
 
 type LogEntry struct {
-	Level           string `json:"level"`
-	Msg             string `json:"msg"`
-	ID              string `json:"id"`
-	Message         string `json:"message"`
-	Source          string `json:"source"`
-	TimestampSend   int64  `json:"timestamp_send"`
-	TimestampRecv   int64  `json:"timestamp_received"`
-	DeliveryDelayMs string `json:"deliveryDelayMs"`
+	Level           string          `json:"level"`
+	Msg             string          `json:"msg"`
+	ID              string          `json:"id"`
+	Message         json.RawMessage `json:"message"`
+	Source          string          `json:"source"`
+	TimestampSend   int64           `json:"timestamp_send"`
+	TimestampRecv   int64           `json:"timestamp_received"`
+	DeliveryDelayMs string          `json:"deliveryDelayMs"`
 }
 
-func writeJSONError(w http.ResponseWriter, success bool, statusCode int, errorName string, reason string) {
+func writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(ErrorResponse{Success: success, Status: statusCode, Error: errorName, Reason: reason})
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+	}
 }
 
 type ErrorResponse struct {
@@ -44,12 +46,12 @@ func (m *mockLogClient) DeleteLogGRPC(id, filename string) (*gen.LogDeletionResp
 	if m.DeleteLogFunc != nil {
 		return m.DeleteLogFunc(id, filename)
 	}
-	return nil, nil // или верни ошибку
+	return nil, nil
 }
 
 func (m *mockLogClient) LogDataGRPC(r *http.Request) (string, error) {
 	if m.LogDataGRPCFunc != nil {
 		return m.LogDataGRPCFunc(r)
 	}
-	return "", nil // или верни ошибку
+	return "", nil
 }

@@ -42,7 +42,7 @@ func TestWriteJSONError(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			rec := httptest.NewRecorder()
 
-			writeJSONError(rec, tt.success, tt.statusCode, tt.errorName, tt.reason)
+			writeJSON(rec, tt.statusCode, tt.errorName+tt.reason)
 
 			// Проверка статуса
 			if rec.Code != tt.statusCode {
