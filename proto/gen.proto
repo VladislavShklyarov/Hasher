@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "google/protobuf/duration.proto";
 
 package gen;
 
@@ -81,6 +82,7 @@ message OperationResponse {
   LogID LogID = 1;
   repeated VariableValue items = 2;
   optional string warning = 3;
+  google.protobuf.Duration processing_time = 4;
 }
 
 service BusinessLogic {

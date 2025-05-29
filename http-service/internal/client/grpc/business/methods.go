@@ -8,7 +8,7 @@ import (
 )
 
 func (c *BusinessClient) Process(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error) {
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 40*time.Second)
 	defer cancel()
 
 	resp, err := c.GRPCClient.Process(ctx, req)

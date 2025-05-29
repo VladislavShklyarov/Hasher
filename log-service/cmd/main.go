@@ -1,9 +1,19 @@
 package main
 
 import (
+	"context"
+	"log-service/internal/config"
 	"log-service/internal/logger/server"
+	"log-service/internal/signals"
 )
 
 func main() {
-	server.RunLogServer()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cfg := config.Load()
+
+	server.RunLogServer(cfg)
+
+	signals.WaitForShutdown(ctx, cancel)
 }

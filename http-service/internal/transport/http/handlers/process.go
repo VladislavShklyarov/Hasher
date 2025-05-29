@@ -6,23 +6,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"google.golang.org/protobuf/types/known/durationpb"
 	gen "http-service/gen"
 	"http-service/internal/app"
 	"http-service/internal/utils"
 	"io"
 	"net/http"
+	"reflect"
 	"time"
 )
 
 type CompositeResponse struct {
-	Success      bool                 `json:"success"`
-	Status       int                  `json:"status"`
-	Message      string               `json:"message"`
-	LogID        string               `json:"log_id,omitempty"`
-	ResultID     string               `json:"result_id,omitempty"`
-	LogError     string               `json:"log_error,omitempty"`
-	ProcessError string               `json:"process_error,omitempty"`
-	Items        []*gen.VariableValue `json:"items,omitempty"`
+	Success            bool                 `json:"success"`
+	Status             int                  `json:"status"`
+	Message            string               `json:"message"`
+	LogID              string               `json:"log_id,omitempty"`
+	ResultID           string               `json:"result_id,omitempty"`
+	LogError           string               `json:"log_error,omitempty"`
+	ProcessError       string               `json:"process_error,omitempty"`
+	Items              []*gen.VariableValue `json:"items,omitempty"`
+	ProcessingDuration string               `json:"processing_duration"`
 }
 
 func ProcessDataHandler(clients *app.Clients) httprouter.Handle {
@@ -48,34 +51,60 @@ func ProcessDataHandler(clients *app.Clients) httprouter.Handle {
 		}
 		r.Body = io.NopCloser(bytes.NewBuffer(body))
 
-		reqLogID, logErr := logRequestData(r.Context(), r, clients)
-		resID, items, procErr := processBusinessData(r.Context(), body, clients, reqLogID)
-
-		fmt.Println("Log from logRequestData: " + reqLogID.GetId())
-		fmt.Println("Log from processBusinessData: " + resID.GetId())
-
-		// Отправляем ID логирования и бизнес серверу тоже -- чтобы затем можно было отследить операции, на которые сделан запрос
 		resp := CompositeResponse{
-			Success:  true,
-			Status:   http.StatusOK,
-			Message:  "Request processed",
-			LogID:    reqLogID.GetId(),
-			ResultID: resID.GetId(),
+			Success: true,
+			Status:  http.StatusOK,
+			Message: "Request received",
 		}
 
-		if logErr != nil {
-			resp.LogError = logErr.Error()
-			resp.Message += ", FAILED to log"
+		var reqLogID *gen.LogID
+		var logErr error
+
+		fmt.Println(clients.LogClient)
+
+		if !isNil(clients.LogClient) {
+			fmt.Println("Мы внутри")
+			reqLogID, logErr = logRequestData(r.Context(), r, clients)
+			if reqLogID != nil {
+				resp.LogID = reqLogID.GetId()
+			}
+			if logErr != nil {
+				resp.LogError = logErr.Error()
+				resp.Message += ", FAILED to log"
+			} else {
+				resp.Message += ", SUCCESSFULLY logged"
+			}
 		} else {
-			resp.Message += ", SUCCESSFULLY logged"
+			resp.Message += ", Log service unavailable"
 		}
 
-		if procErr != nil {
-			resp.ProcessError = procErr.Error()
-			resp.Message += ", FAILED processing"
+		var resBizID *gen.LogID
+		var items []*gen.VariableValue
+		var procErr error
+		var processingTime string
+		if !isNil(clients.BusinessClient) {
+			resBizID, items, processingTime, procErr = processBusinessData(r.Context(), body, clients, reqLogID)
+			if resBizID != nil {
+				resp.ResultID = resBizID.GetId()
+			}
+			if procErr != nil {
+				resp.ProcessError = procErr.Error()
+				resp.Message += ", FAILED processing"
+			} else {
+				resp.Items = items
+				resp.Message += ", SUCCESSFUL processing"
+				resp.ProcessingDuration = processingTime
+			}
 		} else {
-			resp.Items = items
-			resp.Message += ", SUCCESSFUL processing"
+			resp.Message += ", Business service unavailable"
+		}
+
+		if clients.LogClient == nil && clients.BusinessClient == nil {
+			resp.Success = false
+			resp.Status = http.StatusServiceUnavailable
+			resp.Message = "Both Log and Business services unavailable"
+			writeJSON(w, http.StatusServiceUnavailable, resp)
+			return
 		}
 
 		writeJSON(w, http.StatusOK, resp)
@@ -83,7 +112,35 @@ func ProcessDataHandler(clients *app.Clients) httprouter.Handle {
 	}
 }
 
+func FormatDuration(d *durationpb.Duration) string {
+	// Преобразуем protobuf Duration в time.Duration
+	td := d.AsDuration()
+
+	// Покажем в микросекундах, миллисекундах или секундах, если нужно
+	if td < time.Microsecond {
+		return fmt.Sprintf("%d ns", td.Nanoseconds())
+	} else if td < time.Millisecond {
+		return fmt.Sprintf("%.2f µs", float64(td.Nanoseconds())/1000)
+	} else if td < time.Second {
+		return fmt.Sprintf("%.2f ms", float64(td.Microseconds())/1000)
+	} else {
+		return fmt.Sprintf("%.2fs", td.Seconds())
+	}
+}
+
+func isNil(i interface{}) bool {
+	if i == nil {
+		return true
+	}
+	switch v := reflect.ValueOf(i); v.Kind() {
+	case reflect.Ptr, reflect.Interface, reflect.Slice, reflect.Map, reflect.Chan, reflect.Func:
+		return v.IsNil()
+	}
+	return false
+}
+
 func logRequestData(ctx context.Context, r *http.Request, client *app.Clients) (*gen.LogID, error) {
+
 	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read request body: %w", err)
@@ -126,10 +183,12 @@ func logRequestData(ctx context.Context, r *http.Request, client *app.Clients) (
 	return client.LogClient.LogDataGRPC(ctx, entry)
 }
 
-func processBusinessData(ctx context.Context, body []byte, clients *app.Clients, logID *gen.LogID) (resultID *gen.LogID, results []*gen.VariableValue, err error) {
+func processBusinessData(ctx context.Context, body []byte, clients *app.Clients, logID *gen.LogID) (resultID *gen.LogID,
+	results []*gen.VariableValue, processingTime string, err error) {
+
 	var reqParsed requestJSON
 	if err := json.Unmarshal(body, &reqParsed); err != nil {
-		return nil, nil, fmt.Errorf("invalid JSON: %w", err)
+		return nil, nil, "", fmt.Errorf("invalid JSON: %w", err)
 	}
 
 	converted := &gen.OperationRequest{
@@ -150,10 +209,10 @@ func processBusinessData(ctx context.Context, body []byte, clients *app.Clients,
 	resp, err := clients.BusinessClient.Process(ctx, converted)
 	results = resp.GetItems()
 	if err != nil {
-		return nil, nil, fmt.Errorf("business logic error: %w", err)
+		return nil, nil, "", fmt.Errorf("business logic error: %w", err)
 	}
-
-	return resp.LogID, results, nil
+	processingTime = FormatDuration(resp.GetProcessingTime())
+	return resp.LogID, results, processingTime, nil
 }
 
 type requestJSON struct {

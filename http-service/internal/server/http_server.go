@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"http-service/internal/config"
 
 	"http-service/internal/app"
 	"http-service/internal/transport/http"
@@ -9,11 +10,11 @@ import (
 	"time"
 )
 
-func RunHttpServer(app *app.Clients) {
+func RunHttpServer(app *app.Clients, cfg *config.Config) {
 
 	router := http.NewRouter(app)
 	server := &stdHttp.Server{
-		Addr:           ":8080",
+		Addr:           cfg.HttpAddr,
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -21,7 +22,7 @@ func RunHttpServer(app *app.Clients) {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	fmt.Println("server started on :8080")
+	fmt.Printf("server started on: %s", cfg.HttpAddr)
 	err := server.ListenAndServe()
 	if err != nil {
 		fmt.Println(err)

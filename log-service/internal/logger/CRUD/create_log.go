@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/encoding/protojson"
+	"log"
 	"log-service/gen"
 	"log-service/internal/utils"
 	"time"
@@ -13,9 +14,8 @@ import (
 
 type LogManager struct {
 	gen.UnimplementedLoggerServer
-	//mu      sync.RWMutex
-	//logs    map[string]*gen.LogEntry
-	Loggers map[string]*zap.Logger
+	Loggers   map[string]*zap.Logger
+	LogChanel chan *gen.LogEntry
 }
 
 func (lm *LogManager) HandleIncomingLog(ctx context.Context, entry *gen.LogEntry) (*gen.LogCreationResponse, error) {
@@ -26,16 +26,12 @@ func (lm *LogManager) HandleIncomingLog(ctx context.Context, entry *gen.LogEntry
 	}
 
 	id := gen.LogID{Id: utils.GenerateID(10)}
-	//lm.mu.Lock()
-	//lm.logs[id.GetId()] = entry
-	//lm.mu.Unlock()
-
 	logger, ok := lm.Loggers[entry.ServiceName]
 	if !ok {
 		logger = lm.Loggers["undefined-server"]
 	}
 
-	WriteLogToFile(logger, entry.GetLevel(), id.GetId(), entry)
+	WriteLogToFile(logger, entry.GetLevel(), id.GetId(), entry, lm.LogChanel)
 
 	_ = logger.Sync()
 
@@ -43,7 +39,7 @@ func (lm *LogManager) HandleIncomingLog(ctx context.Context, entry *gen.LogEntry
 
 }
 
-func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogEntry) {
+func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogEntry, logChan chan *gen.LogEntry) {
 
 	sendTs := entry.TimestampSend
 	receiveTs := time.Now().UnixMilli()
@@ -55,8 +51,6 @@ func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogE
 	if err != nil {
 		msgJSON = []byte(fmt.Sprintf(`"error serializing message: %v"`, err))
 	}
-
-	fmt.Println(string(msgJSON))
 
 	logFields := []zap.Field{
 		zap.String("id", id),
@@ -79,5 +73,14 @@ func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogE
 		logger.Error("New log entry", logFields...)
 	default:
 		logger.Info("New log entry", logFields...)
+	}
+
+	if entry.ServiceName == "business-server" {
+		select {
+		case logChan <- entry:
+			fmt.Printf("Log %s successfully send to chanel\n", id)
+		default:
+			log.Println("LogChanel is full, dropping message")
+		}
 	}
 }

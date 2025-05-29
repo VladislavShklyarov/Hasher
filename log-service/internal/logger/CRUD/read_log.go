@@ -14,13 +14,13 @@ func (*LogManager) ReadLog(ctx context.Context, logInfo *gen.LogInfo) (*gen.LogR
 
 	filename := logInfo.GetFilename()
 
-	file, err := openFile(filename)
+	file, err := OpenFile(filename)
 	if err != nil {
 		return writeWrongReadResponse("failed to open file", err), nil
 	}
 	defer file.Close()
 
-	log, err := findLog(file, logInfo.GetId())
+	log, err := FindLog(file, logInfo.GetId())
 	if err != nil {
 		return writeWrongReadResponse(fmt.Sprintf("failed to find log in %s", filename), err), nil
 	}
@@ -33,7 +33,7 @@ func (*LogManager) ReadLog(ctx context.Context, logInfo *gen.LogInfo) (*gen.LogR
 
 }
 
-func openFile(filename string) (file *os.File, err error) {
+func OpenFile(filename string) (file *os.File, err error) {
 	filePath := filepath.Join("../log_files/", filename)
 	file, err = os.Open(filePath)
 	if err != nil {
@@ -42,7 +42,7 @@ func openFile(filename string) (file *os.File, err error) {
 	return file, nil
 }
 
-func findLog(file *os.File, id string) (log string, err error) {
+func FindLog(file *os.File, id string) (log string, err error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"business-service/internal/client/grpc/log"
+	"business-service/internal/clients/grpc/log"
 	blm "business-service/internal/server/handlers"
 )
 

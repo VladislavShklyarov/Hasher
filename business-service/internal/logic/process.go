@@ -2,69 +2,94 @@ package logic
 
 import (
 	"business-service/gen"
+	"container/list"
 	"fmt"
 	"strconv"
+	"sync"
 	"time"
 )
 
-func Process(operations []*gen.Operation, required map[string]bool, graph map[string][]string) ([]*gen.VariableValue, []string) {
-
+func Process(operations []*gen.Operation, required map[string]bool) ([]*gen.VariableValue, []string) {
 	vars := NewVarStore()
 	var result []*gen.VariableValue
-
 	brokenVars := make([]string, 0, 10)
 
-	remaining := make([]*gen.Operation, len(operations))
-	copy(remaining, operations)
+	var wg sync.WaitGroup
+	mu := &sync.Mutex{}
 
-	for len(remaining) > 0 {
-		progress := false
-		next := []*gen.Operation{}
+	pending := append([]*gen.Operation{}, operations...)
 
-		for _, op := range remaining {
-			switch op.GetType() {
-			case "calc":
-				if required[op.GetVar()] {
-					if DoCalc(vars, op.GetVar(), op.GetLeft(), op.GetRight(), op.GetOp()) {
-						progress = true
-					} else {
-						next = append(next, op)
-					}
-				}
-			case "print":
-				DoPrint(vars, &result, op.GetVar(), &brokenVars)
-				continue
-			}
+	for {
+
+		var (
+			progress  bool
+			remaining []*gen.Operation
+			readyOps  []*gen.Operation
+		)
+
+		remaining, readyOps = devideOperations(pending, required, vars)
+
+		if len(readyOps) == 0 {
+			break
 		}
+
+		for _, op := range readyOps {
+			wg.Add(1)
+			go func(op *gen.Operation) {
+				defer wg.Done()
+				if doCalc(vars, op.GetVar(), op.GetLeft(), op.GetRight(), op.GetOp()) {
+					mu.Lock()
+					progress = true // Дает возможность добавить доп. условия
+					mu.Unlock()
+				}
+			}(op)
+		}
+
+		wg.Wait()
 
 		if !progress {
 			break
 		}
-		remaining = next
+
+		pending = remaining
 	}
 
-	for k, v := range graph {
-		fmt.Printf("%s -> %v\n", k, v)
-	}
-	fmt.Println("\n==========================\n")
-	for _, variable := range result {
-		fmt.Println(variable)
-	}
-	fmt.Println("\n==========================\n")
+	processPrint(vars, &result, operations, brokenVars)
+	fmt.Println(result)
 	return result, brokenVars
-
 }
 
-func isNumber(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
+func processPrint(vars *VarStore, result *[]*gen.VariableValue, operations []*gen.Operation, brokenVars []string) {
+	for _, op := range operations {
+		if op.GetType() == "print" {
+			doPrint(vars, result, op.GetVar(), &brokenVars)
+		}
+	}
+}
+
+func devideOperations(pending []*gen.Operation, required map[string]bool, vars *VarStore) (remaining []*gen.Operation, readyOps []*gen.Operation) {
+	for _, op := range pending {
+		if op.GetType() != "calc" || !required[op.GetVar()] {
+			continue
+		}
+
+		if doCalcReady(vars, op.GetLeft(), op.GetRight()) {
+			readyOps = append(readyOps, op)
+		} else {
+			remaining = append(remaining, op)
+		}
+	}
+	return remaining, readyOps
 }
 
 func FindAliveVariables(operations []*gen.Operation) (map[string]bool, map[string][]string) {
 	graph := map[string][]string{}
+	required := map[string]bool{}
+	queue := list.New()
 
-	// Построим граф зависимостей
 	for _, op := range operations {
+		fmt.Println(op)
+		// Сначала строим граф зависимостей. Если в расчете один из элементов - переменная, то var зависит от нее
 		if op.GetType() == "calc" {
 			if !isNumber(op.GetLeft()) {
 				graph[op.GetVar()] = append(graph[op.GetVar()], op.GetLeft())
@@ -72,39 +97,35 @@ func FindAliveVariables(operations []*gen.Operation) (map[string]bool, map[strin
 			if !isNumber(op.GetRight()) {
 				graph[op.GetVar()] = append(graph[op.GetVar()], op.GetRight())
 			}
-		}
-	}
-
-	required := map[string]bool{}
-	queue := []string{}
-
-	for _, op := range operations {
-		if op.GetType() == "print" {
+		} else if op.GetType() == "print" {
 			varName := op.GetVar()
 			required[varName] = true
-			queue = append(queue, varName)
+			queue.PushBack(varName)
+			fmt.Println("		Добавили в очередь:", varName)
 		}
 	}
 
-	fmt.Println("Очередь:", queue)
+	fmt.Println("Итоговая Очередь:", queue)
+	fmt.Println("Начинаем обход графа...")
 
-	for len(queue) > 0 {
-		curr := queue[0]
-		queue = queue[1:]
-
+	for queue.Len() > 0 {
+		curr := queue.Front().Value.(string)
+		queue.Remove(queue.Front())
 		for _, dep := range graph[curr] {
+			fmt.Printf("	Зависимость %s", dep)
 			if !required[dep] {
 				required[dep] = true
-				queue = append(queue, dep)
+				queue.PushBack(dep)
 			}
 		}
 	}
 
+	fmt.Println(graph)
 	return required, graph
 }
 
-func DoCalc(vars *VarStore, variable, left, right, op string) bool {
-	time.Sleep(100 * time.Millisecond) // симуляция задержки
+func doCalc(vars *VarStore, variable, left, right, op string) bool {
+	time.Sleep(50 * time.Millisecond) // симуляция задержки
 
 	if _, ok := vars.Get(variable); ok {
 		return false
@@ -144,7 +165,7 @@ func parseOperand(op string, vars *VarStore) (int, error) {
 	return 0, fmt.Errorf("неизвестная переменная: %s", op)
 }
 
-func DoPrint(vars *VarStore, results *[]*gen.VariableValue, variable string, brokenVars *[]string) {
+func doPrint(vars *VarStore, results *[]*gen.VariableValue, variable string, brokenVars *[]string) {
 	if val, ok := vars.Get(variable); ok {
 		*results = append(*results, &gen.VariableValue{
 			Var:   variable,
@@ -157,4 +178,21 @@ func DoPrint(vars *VarStore, results *[]*gen.VariableValue, variable string, bro
 		})
 		*brokenVars = append(*brokenVars, variable)
 	}
+}
+
+func isNumber(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
+}
+
+func doCalcReady(vars *VarStore, left, right string) bool {
+	isReady := func(s string) bool {
+		if isNumber(s) {
+			return true
+		}
+		_, ok := vars.Get(s)
+		return ok
+	}
+
+	return isReady(left) && isReady(right)
 }

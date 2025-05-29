@@ -2,25 +2,23 @@ package business
 
 import (
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	gen "http-service/gen"
+	"http-service/internal/config"
 	"log"
 	"time"
 )
+
+const connectionError = "rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 127.0.0.1:9091: connect: connection refused\""
 
 type BusinessClient struct {
 	GRPCClient gen.BusinessLogicClient // Wrap GRPCclient
 }
 
-//type BusinessClientInterface interface {
-//	Process(ctx context.Context, req *gen.Request) (*gen.Response, error)
-//}
-//
-//var _ BusinessClientInterface = (*BusinessClient)(nil)
-
-func CreateBusinessClient() *BusinessClient {
-	conn, err := grpc.NewClient("Localhost:9091", grpc.WithTransportCredentials(insecure.NewCredentials()))
+func CreateBusinessClient(cfg *config.Config) *BusinessClient {
+	conn, err := grpc.NewClient(cfg.BusinessAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		log.Fatalf("failed to connect to business server: %v", err)
@@ -30,7 +28,7 @@ func CreateBusinessClient() *BusinessClient {
 		GRPCClient: gen.NewBusinessLogicClient(conn),
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
 	defer cancel()
 
 	testEntry := createTestEntry()
@@ -38,8 +36,17 @@ func CreateBusinessClient() *BusinessClient {
 	resp, err := client.GRPCClient.Process(ctx, testEntry)
 
 	if err != nil {
-		log.Fatalf("Business server connected, but test operation failed: %v", err)
+		fmt.Println(err.Error())
+
+		if err.Error() == connectionError {
+			log.Println("Business server connection error")
+			return nil
+		} else {
+			log.Printf("Business server connected, but test message failed: %v", err)
+			return nil
+		}
 	}
+
 	log.Printf("Handshake successful, response: %v", resp)
 
 	return client

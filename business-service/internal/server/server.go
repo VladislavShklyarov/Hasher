@@ -2,21 +2,22 @@ package server
 
 import (
 	"business-service/gen"
-	grpcClient "business-service/internal/client/grpc/log"
+	grpcClient "business-service/internal/clients/grpc/log"
+	"business-service/internal/config"
 	"google.golang.org/grpc"
 	"log"
 	"net"
 )
 
-func RunBusinessServer() {
-	lis, err := net.Listen("tcp", ":9091")
+func RunBusinessServer(cfg *config.Config) {
+	lis, err := net.Listen("tcp", cfg.BusinessAddr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	log.Println("Starting business logic server on :9091")
+	log.Printf("Starting business logic server on :%s", cfg.BusinessAddr)
 
-	logClient := grpcClient.CreateLogClient()
+	logClient := grpcClient.CreateLogClient(cfg)
 
 	if err := StartGRPCServer(lis, newBusinessLogicManager(logClient)); err != nil {
 		log.Fatalf("failed to serve: %v", err)

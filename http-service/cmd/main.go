@@ -1,18 +1,17 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"http-service/internal/app"
 	grpcBiz "http-service/internal/client/grpc/business"
 	grpcLog "http-service/internal/client/grpc/log"
+	"http-service/internal/config"
 	"http-service/internal/server"
+	"http-service/internal/signals"
 	_ "http-service/internal/transport/http"
-	"log"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 // @title			Swagger Example API
@@ -20,19 +19,19 @@ import (
 // @description	This is a sample server celler server
 // @termOfService	http://swagger.io/terms
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cfg := config.Load()
 
 	clients := &app.Clients{
-		LogClient:      grpcLog.CreateLogClient(),
-		BusinessClient: grpcBiz.CreateBusinessClient(),
+		LogClient:      grpcLog.CreateLogClient(cfg),
+		BusinessClient: grpcBiz.CreateBusinessClient(cfg),
 	}
 
-	go server.RunHttpServer(clients)
+	go server.RunHttpServer(clients, cfg)
 
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-	<-stop
-
-	log.Println("Shutting down server...")
+	signals.WaitForShutdown(ctx, cancel)
 }
 
 // ProcessDataHandler обрабатывает POST запрос для отправки данных и их логирования.

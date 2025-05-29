@@ -18,7 +18,7 @@ func (*LogManager) DeleteLog(ctx context.Context, logInfo *gen.LogInfo) (*gen.Lo
 
 	filePath := filepath.Join("../log_files/", filename)
 
-	file, err := openFile(filename)
+	file, err := OpenFile(filename)
 	if err != nil {
 		return writeWrongDeleteResponse("failed to open file: " + err.Error()), nil
 	}

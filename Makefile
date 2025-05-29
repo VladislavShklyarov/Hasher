@@ -4,7 +4,7 @@ PROTO_FILE := gen.proto
 
 
 
-SERVICES := log-service http-service business-service
+SERVICES := log-service http-service business-service dashboard-service
 
 .PHONY: generate clean test
 

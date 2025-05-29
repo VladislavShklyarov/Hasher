@@ -7,16 +7,6 @@ import (
 	"strings"
 )
 
-// Проверка: участвует ли переменная как аргумент в других выражениях
-func isUsedAsInput(varName string, ops []*gen.Operation) bool {
-	for _, op := range ops {
-		if op.Type == "calc" && (op.Left == varName || op.Right == varName) {
-			return true
-		}
-	}
-	return false
-}
-
 func ExportToDOT(ops []*gen.Operation, alive map[string]bool, graph map[string][]string, filename string) error {
 	var sb strings.Builder
 	sb.WriteString("digraph G {\n")
