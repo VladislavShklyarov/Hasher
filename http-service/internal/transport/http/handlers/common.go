@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	gen "http-service/gen"
 	"net/http"
@@ -35,7 +36,7 @@ type ErrorResponse struct {
 type mockLogClient struct {
 	ReadLogFunc     func(id, filename string) (*gen.LogReadingResponse, error)
 	DeleteLogFunc   func(id, filename string) (*gen.LogDeletionResponse, error)
-	LogDataGRPCFunc func(r *http.Request) (string, error)
+	LogDataGRPCFunc func(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error)
 }
 
 func (m *mockLogClient) ReadLogGRPC(id, filename string) (*gen.LogReadingResponse, error) {
@@ -43,15 +44,17 @@ func (m *mockLogClient) ReadLogGRPC(id, filename string) (*gen.LogReadingRespons
 }
 
 func (m *mockLogClient) DeleteLogGRPC(id, filename string) (*gen.LogDeletionResponse, error) {
-	if m.DeleteLogFunc != nil {
-		return m.DeleteLogFunc(id, filename)
-	}
-	return nil, nil
+	return m.DeleteLogFunc(id, filename)
 }
 
-func (m *mockLogClient) LogDataGRPC(r *http.Request) (string, error) {
-	if m.LogDataGRPCFunc != nil {
-		return m.LogDataGRPCFunc(r)
-	}
-	return "", nil
+func (m *mockLogClient) LogDataGRPC(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error) {
+	return m.LogDataGRPCFunc(ctx, entry)
+}
+
+type mockBizClient struct {
+	ProcessFunc func(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error)
+}
+
+func (m *mockBizClient) Process(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error) {
+	return m.ProcessFunc(ctx, req)
 }

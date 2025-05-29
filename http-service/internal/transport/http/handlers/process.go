@@ -116,7 +116,6 @@ func FormatDuration(d *durationpb.Duration) string {
 	// Преобразуем protobuf Duration в time.Duration
 	td := d.AsDuration()
 
-	// Покажем в микросекундах, миллисекундах или секундах, если нужно
 	if td < time.Microsecond {
 		return fmt.Sprintf("%d ns", td.Nanoseconds())
 	} else if td < time.Millisecond {

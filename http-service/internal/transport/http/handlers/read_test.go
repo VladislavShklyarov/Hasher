@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/julienschmidt/httprouter"
-	gen "http-service/gen/logger"
+	"http-service/gen"
 	"http-service/internal/app"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -45,7 +46,7 @@ func TestParseReadResponse(t *testing.T) {
 					Level:           "info",
 					Msg:             "New log entry",
 					ID:              "abc123",
-					Message:         "Hello, world!",
+					Message:         json.RawMessage(`"Hello, world!"`),
 					Source:          "test-server",
 					TimestampSend:   111,
 					TimestampRecv:   222,
@@ -79,8 +80,17 @@ func TestParseReadResponse(t *testing.T) {
 			},
 			expect: ReadResponse{
 				Success: false,
-				Log:     LogEntry{},
-				Error:   "log not found",
+				Log: LogEntry{
+					Level:           "",
+					Msg:             "",
+					ID:              "",
+					Message:         []byte("null"),
+					Source:          "",
+					TimestampSend:   0,
+					TimestampRecv:   0,
+					DeliveryDelayMs: "",
+				},
+				Error: "log not found",
 			},
 			expectErr: false,
 		},
@@ -104,7 +114,7 @@ func TestParseReadResponse(t *testing.T) {
 				return
 			}
 
-			if gotResp != tt.expect {
+			if !reflect.DeepEqual(gotResp, tt.expect) {
 				t.Errorf("expected response: %+v, got: %+v", tt.expect, gotResp)
 			}
 		})

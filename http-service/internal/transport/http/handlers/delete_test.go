@@ -3,7 +3,7 @@ package handlers
 import (
 	"errors"
 	"github.com/julienschmidt/httprouter"
-	gen "http-service/gen/logger"
+	gen "http-service/gen"
 	"http-service/internal/app"
 	"io"
 	"net/http"

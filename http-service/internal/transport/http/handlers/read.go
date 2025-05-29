@@ -43,6 +43,15 @@ func ReadLogHandler(clients *app.Clients) httprouter.Handle {
 }
 
 func parseReadResponse(readLogResponse *gen.LogReadingResponse) ([]byte, error) {
+	if !readLogResponse.Success {
+		resp := ReadResponse{
+			Success: false,
+			Log:     LogEntry{},
+			Error:   readLogResponse.Error,
+		}
+		return json.Marshal(resp)
+	}
+
 	var logEntry LogEntry
 
 	err := json.Unmarshal([]byte(readLogResponse.Log), &logEntry)

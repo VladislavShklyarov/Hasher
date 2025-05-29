@@ -54,15 +54,15 @@ func Process(operations []*gen.Operation, required map[string]bool) ([]*gen.Vari
 		pending = remaining
 	}
 
-	processPrint(vars, &result, operations, brokenVars)
+	processPrint(vars, &result, operations, &brokenVars)
 	fmt.Println(result)
 	return result, brokenVars
 }
 
-func processPrint(vars *VarStore, result *[]*gen.VariableValue, operations []*gen.Operation, brokenVars []string) {
+func processPrint(vars *VarStore, result *[]*gen.VariableValue, operations []*gen.Operation, brokenVars *[]string) {
 	for _, op := range operations {
 		if op.GetType() == "print" {
-			doPrint(vars, result, op.GetVar(), &brokenVars)
+			doPrint(vars, result, op.GetVar(), brokenVars)
 		}
 	}
 }

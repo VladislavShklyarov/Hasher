@@ -43,6 +43,60 @@ func TestFindAliveVariables(t *testing.T) {
 				"w2": {"z"},
 			},
 		},
+		{
+			name: "no print operations",
+			operations: []*gen.Operation{
+				{Type: "calc", Op: "+", Var: "a", Left: "1", Right: "2"},
+				{Type: "calc", Op: "*", Var: "b", Left: "a", Right: "3"},
+			},
+			wantAlive: map[string]bool{},
+			wantGraph: map[string][]string{
+				"a": {},
+				"b": {"a"},
+			},
+		},
+		{
+			name: "print variable with no dependencies",
+			operations: []*gen.Operation{
+				{Type: "print", Var: "c"},
+			},
+			wantAlive: map[string]bool{
+				"c": true,
+			},
+			wantGraph: map[string][]string{},
+		},
+		{
+			name: "cyclic dependency",
+			operations: []*gen.Operation{
+				{Type: "calc", Op: "+", Var: "p", Left: "q", Right: "1"},
+				{Type: "calc", Op: "*", Var: "q", Left: "p", Right: "2"},
+				{Type: "print", Var: "p"},
+			},
+			wantAlive: map[string]bool{
+				"p": true,
+				"q": true,
+			},
+			wantGraph: map[string][]string{
+				"p": {"q"},
+				"q": {"p"},
+			},
+		},
+		{
+			name: "mixed number and variable dependencies",
+			operations: []*gen.Operation{
+				{Type: "calc", Op: "-", Var: "m", Left: "10", Right: "n"},
+				{Type: "calc", Op: "+", Var: "n", Left: "5", Right: "3"},
+				{Type: "print", Var: "m"},
+			},
+			wantAlive: map[string]bool{
+				"m": true,
+				"n": true,
+			},
+			wantGraph: map[string][]string{
+				"m": {"n"},
+				"n": {},
+			},
+		},
 	}
 
 	for _, tt := range tests {

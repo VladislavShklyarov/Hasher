@@ -3,7 +3,7 @@ package CRUD
 import (
 	"context"
 	"io/fs"
-	"log-service/gen/logger"
+	"log-service/gen"
 	"os"
 	"strings"
 	"testing"

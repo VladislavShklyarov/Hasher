@@ -1,69 +1,122 @@
 package handlers
 
 import (
-	"encoding/json"
+	"bytes"
+	"context"
+	"errors"
+	"github.com/julienschmidt/httprouter"
+	"google.golang.org/protobuf/types/known/durationpb"
+	"http-service/gen"
+	"http-service/internal/app"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 )
 
-func TestWriteJSONSuccessResponse(t *testing.T) {
+func TestProcessDataHandler(t *testing.T) {
 	tests := []struct {
-		name       string
-		success    bool
-		statusCode int
-		message    string
-		id         string
+		name              string
+		requestBody       string
+		mockLogResponse   *gen.LogID
+		mockLogError      error
+		mockBizResponse   *gen.OperationResponse
+		mockBizError      error
+		expectedStatus    int
+		expectedBodyMatch []string
 	}{
 		{
-			name:       "basic success",
-			success:    true,
-			statusCode: http.StatusOK,
-			message:    "Everything is fine",
-			id:         "abc123",
+			name:              "invalid request (malformed JSON)",
+			requestBody:       `{"operations": [}`,
+			expectedStatus:    http.StatusBadRequest,
+			expectedBodyMatch: []string{`"success":false`, `"Invalid requesst"`},
 		},
 		{
-			name:       "custom message and code",
-			success:    false,
-			statusCode: http.StatusBadRequest,
-			message:    "Invalid input",
-			id:         "err-456",
+			name:            "log client logs successfully, business client fails",
+			requestBody:     `{"operations":[{"type":"calc","op":"add","var":"x","left":"1","right":"2"}]}`,
+			mockLogResponse: &gen.LogID{Id: "log123"},
+			mockBizError:    errors.New("processing error"),
+			mockBizResponse: &gen.OperationResponse{},
+			expectedStatus:  http.StatusOK,
+			expectedBodyMatch: []string{
+				`"log_id":"log123"`,
+				`"process_error":"business logic error: processing error"`,
+				`"message":"Request received, SUCCESSFULLY logged, FAILED processing"`,
+			},
+		},
+		{
+			name:            "both log and business succeed",
+			requestBody:     `{"operations":[{"type":"calc","op":"add","var":"x","left":"1","right":"2"}]}`,
+			mockLogResponse: &gen.LogID{Id: "log456"},
+			mockBizResponse: &gen.OperationResponse{
+				LogID:          &gen.LogID{Id: "biz789"},
+				Items:          []*gen.VariableValue{{Var: "x", Value: 3}},
+				ProcessingTime: durationpb.New(150 * time.Millisecond),
+			},
+			expectedStatus: http.StatusOK,
+			expectedBodyMatch: []string{
+				`"log_id":"log456"`,
+				`"result_id":"biz789"`,
+				`"value":3`,
+				`"processing_duration":"150.00 ms"`,
+				`"message":"Request received, SUCCESSFULLY logged, SUCCESSFUL processing"`,
+			},
+		},
+		{
+			name:              "both services unavailable",
+			requestBody:       `{"operations":[{"type":"calc","op":"add","var":"x","left":"1","right":"2"}]}`,
+			expectedStatus:    http.StatusServiceUnavailable,
+			expectedBodyMatch: []string{`"success":false`, `"Both Log and Business services unavailable"`},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rec := httptest.NewRecorder()
-
-			writeJSONSuccessResponce(rec, tt.success, tt.statusCode, tt.message, tt.id)
-
-			// Проверяем статус код
-			if rec.Code != tt.statusCode {
-				t.Errorf("expected status code %d, got %d", tt.statusCode, rec.Code)
+			mockLogClient := &mockLogClient{
+				LogDataGRPCFunc: func(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error) {
+					return tt.mockLogResponse, tt.mockLogError
+				},
 			}
 
-			// Проверяем заголовки
-			if contentType := rec.Header().Get("Content-Type"); contentType != "application/json" {
-				t.Errorf("expected Content-Type application/json, got %s", contentType)
+			mockBizClient := &mockBizClient{
+				ProcessFunc: func(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error) {
+					return tt.mockBizResponse, tt.mockBizError
+				},
 			}
 
-			// Проверяем тело ответа
-			var resp SuccesResponse
-			if err := json.NewDecoder(rec.Body).Decode(&resp); err != nil {
-				t.Fatalf("failed to decode response: %v", err)
+			clients := &app.Clients{
+				LogClient:      nil,
+				BusinessClient: nil,
 			}
 
-			if resp.Success != tt.success {
-				t.Errorf("expected success %v, got %v", tt.success, resp.Success)
+			if tt.mockLogResponse != nil || tt.mockLogError != nil {
+				clients.LogClient = mockLogClient
 			}
-			if resp.Status != tt.statusCode {
-				t.Errorf("expected status %d, got %d", tt.statusCode, resp.Status)
+			if tt.mockBizResponse != nil || tt.mockBizError != nil {
+				clients.BusinessClient = mockBizClient
 			}
-			if resp.Message != tt.message {
-				t.Errorf("expected message %q, got %q", tt.message, resp.Message)
+
+			req := httptest.NewRequest(http.MethodPost, "/process", bytes.NewBufferString(tt.requestBody))
+			req.Header.Set("Content-Type", "application/json")
+
+			w := httptest.NewRecorder()
+
+			handler := ProcessDataHandler(clients)
+			handler(w, req, httprouter.Params{})
+
+			res := w.Result()
+			defer res.Body.Close()
+			body, _ := io.ReadAll(res.Body)
+
+			if res.StatusCode != tt.expectedStatus {
+				t.Errorf("expected status %d, got %d", tt.expectedStatus, res.StatusCode)
 			}
-			if resp.Id != tt.id {
-				t.Errorf("expected id %q, got %q", tt.id, resp.Id)
+			for _, expected := range tt.expectedBodyMatch {
+				if !strings.Contains(string(body), expected) {
+					t.Errorf("expected body to contain %q, got %q", expected, string(body))
+				}
 			}
 		})
 	}

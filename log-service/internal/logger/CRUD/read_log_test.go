@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"io/fs"
-	"log-service/gen/logger"
+	"log-service/gen"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,7 +40,7 @@ func TestFindLog(t *testing.T) {
 			file := createTempFile(t, tt.content)
 			defer file.Close()
 
-			got, err := findLog(file, tt.id)
+			got, err := FindLog(file, tt.id)
 			if (err != nil) != tt.expectErr {
 				t.Errorf("expected error: %v, got: %v", tt.expectErr, err)
 			}
@@ -136,7 +136,7 @@ func TestOpenFile(t *testing.T) {
 				defer cleanupTempLogFile(t, filePath)
 			}
 
-			file, err := openFile(tt.filename)
+			file, err := OpenFile(tt.filename)
 			if (err != nil) != tt.expectErr {
 				t.Errorf("expected error: %v, got: %v", tt.expectErr, err)
 			}
