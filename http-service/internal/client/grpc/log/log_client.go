@@ -17,12 +17,6 @@ type LogClient struct {
 	LoggerClient gen.LoggerClient
 }
 
-//type LogicClientInterface interface {
-//	Process(ctx context.Context, req *gen.R) (*gen.Response, error)
-//}
-//
-//var _ LogClientInterface = (*LogClient)(nil) // compile-time check
-
 func CreateLogClient(cfg *config.Config) *LogClient {
 	conn, err := grpc.NewClient(cfg.LoggerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 

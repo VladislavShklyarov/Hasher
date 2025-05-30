@@ -28,6 +28,18 @@ type CompositeResponse struct {
 	ProcessingDuration string               `json:"processing_duration"`
 }
 
+type requestJSON struct {
+	Operations []operationJSON `json:"operations"`
+}
+
+type operationJSON struct {
+	Type  string           `json:"type"`
+	Op    string           `json:"op"`
+	Var   string           `json:"var"`
+	Left  utils.FlexString `json:"left"`
+	Right utils.FlexString `json:"right"`
+}
+
 func ProcessDataHandler(clients *app.Clients) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		defer r.Body.Close()
@@ -212,16 +224,4 @@ func processBusinessData(ctx context.Context, body []byte, clients *app.Clients,
 	}
 	processingTime = FormatDuration(resp.GetProcessingTime())
 	return resp.LogID, results, processingTime, nil
-}
-
-type requestJSON struct {
-	Operations []operationJSON `json:"operations"`
-}
-
-type operationJSON struct {
-	Type  string           `json:"type"`
-	Op    string           `json:"op"`
-	Var   string           `json:"var"`
-	Left  utils.FlexString `json:"left"`
-	Right utils.FlexString `json:"right"`
 }

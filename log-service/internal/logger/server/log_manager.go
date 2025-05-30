@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
@@ -33,6 +34,7 @@ func createLogger(serviceName string, cfg *config.Config) *zap.Logger {
 	}
 
 	logFile, _ := os.OpenFile(logDir+"/"+serviceName+"_logs.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	fmt.Println(logDir + "/" + serviceName + "_logs.json")
 	core := zapcore.NewCore(encoder, zapcore.AddSync(logFile), zapcore.DebugLevel)
 	return zap.New(core)
 }

@@ -7,11 +7,11 @@ import (
 )
 
 type Config struct {
-	WsAddr    string
-	ImageDir  string
-	KafkaAddr string
-	BizTopic  string
-	LogTopic  string
+	WsAddr      string
+	ImageDir    string
+	KafkaBroker string
+	BizTopic    string
+	LogTopic    string
 }
 
 func Load() *Config {
@@ -21,10 +21,10 @@ func Load() *Config {
 	}
 
 	return &Config{
-		WsAddr:    os.Getenv("WS_ADDR"),
-		KafkaAddr: os.Getenv("KAFKA_ADDR"),
-		ImageDir:  os.Getenv("STATIC_DIR"),
-		BizTopic:  os.Getenv("BUSINESS_TOPIC"),
-		LogTopic:  os.Getenv("LOG_TOPIC"),
+		WsAddr:      os.Getenv("WS_ADDR"),
+		KafkaBroker: os.Getenv("KAFKA_BROKER"),
+		ImageDir:    os.Getenv("STATIC_DIR"),
+		BizTopic:    os.Getenv("BUSINESS_TOPIC"),
+		LogTopic:    os.Getenv("LOG_TOPIC"),
 	}
 }

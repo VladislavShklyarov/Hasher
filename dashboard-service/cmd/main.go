@@ -25,7 +25,7 @@ func main() {
 	clients := &wscd.Clients{Clients: make(map[*websocket.Conn]bool)}
 
 	go wscd.StartWebSocket(clients, cfg)
-	go consumer.StartAll(clients, ctx, cfg.KafkaAddr)
+	go consumer.StartAll(clients, ctx, cfg.KafkaBroker)
 
 	log.Println("dashboard-service is running...")
 

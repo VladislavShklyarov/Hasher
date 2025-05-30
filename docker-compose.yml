@@ -12,14 +12,81 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
+
     container_name: kafka
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "9092:9092"      # Внутренний порт для Docker сети
+      - "29092:29092"    # Внешний порт для хоста
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+
+  business-service:
+    build:
+      context: ./business-service
+      dockerfile: Dockerfile
+    container_name: business-service
+    depends_on:
+      - kafka
+      - log-service
+    ports:
+      - "9091:8080"
+    environment:
+      LOGGER_ADDR: log-service:8080
+      BUSINESS_ADDR: 0.0.0.0:8080
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: alg_graph_pic
+
+  log-service:
+    build:
+      context: ./log-service
+      dockerfile: Dockerfile
+    container_name: log-service
+    ports:
+      - "9090:8080"
+    volumes:
+      - ./log_files:/log_files
+    environment:
+      LOGGER_ADDR: 0.0.0.0:8080
+      LOGS_DIR: /log_files
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: operation_log
+
+  http-service:
+    build:
+      context: ./http-service
+      dockerfile: Dockerfile
+    container_name: http-service
+    depends_on:
+      - log-service
+      - business-service
+    ports:
+      - "8080:8080"
+    environment:
+      LOGGER_ADDR: log-service:8080
+      BUSINESS_ADR: business-service:8080
+      HTTP_ADDR: 0.0.0.0:8080
+
+  dashboard-service:
+    build:
+      context: ./dashboard-service
+      dockerfile: Dockerfile
+    container_name: dashboard-service
+    depends_on:
+      - kafka
+    ports:
+      - "8000:8000"
+    environment:
+      KAFKA_BROKER: kafka:9092
+      BUSINESS_TOPIC: alg_graph_pic
+      LOG_TOPIC: operation_log
+      WS_ADDR: 0.0.0.0:8000

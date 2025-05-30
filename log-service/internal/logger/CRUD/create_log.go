@@ -40,7 +40,7 @@ func (lm *LogManager) HandleIncomingLog(ctx context.Context, entry *gen.LogEntry
 }
 
 func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogEntry, logChan chan *gen.LogEntry) {
-
+	log.Println("Хотим записать лог:", level, id, entry.String())
 	sendTs := entry.TimestampSend
 	receiveTs := time.Now().UnixMilli()
 	delay := float64(receiveTs - sendTs)

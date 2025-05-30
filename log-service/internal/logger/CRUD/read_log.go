@@ -13,6 +13,7 @@ import (
 func (*LogManager) ReadLog(ctx context.Context, logInfo *gen.LogInfo) (*gen.LogReadingResponse, error) {
 
 	filename := logInfo.GetFilename()
+	fmt.Println(filename)
 
 	file, err := OpenFile(filename)
 	if err != nil {
@@ -37,16 +38,19 @@ func OpenFile(filename string) (file *os.File, err error) {
 	filePath := filepath.Join("../log_files/", filename)
 	file, err = os.Open(filePath)
 	if err != nil {
+		fmt.Println("Error while opening file: ", err)
 		return nil, err
+	} else {
+		fmt.Println("File open successfully")
+		return file, nil
 	}
-	return file, nil
 }
 
 func FindLog(file *os.File, id string) (log string, err error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-
+		fmt.Println("	New line starts here: ", line)
 		var logId struct {
 			ID string `json:"id"`
 		}

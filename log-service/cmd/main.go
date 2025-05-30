@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log-service/internal/config"
 	"log-service/internal/logger/server"
 	"log-service/internal/signals"
@@ -12,6 +13,7 @@ func main() {
 	defer cancel()
 
 	cfg := config.Load()
+	fmt.Println("Route to logs: ", cfg.LogsDir)
 
 	server.RunLogServer(cfg)
 

@@ -1,0 +1,2832 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>cmd: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">./business-service/cmd/main.go (0.0%)</option>
+				
+				<option value="file1">./business-service/internal/clients/grpc/log/log_client.go (0.0%)</option>
+				
+				<option value="file2">./business-service/internal/clients/grpc/log/methods.go (0.0%)</option>
+				
+				<option value="file3">./business-service/internal/clients/kafka/producer.go (0.0%)</option>
+				
+				<option value="file4">./business-service/internal/clients/kafka/writer.go (0.0%)</option>
+				
+				<option value="file5">./business-service/internal/config/config.go (0.0%)</option>
+				
+				<option value="file6">./business-service/internal/logic/grapth.go (0.0%)</option>
+				
+				<option value="file7">./business-service/internal/logic/process.go (87.5%)</option>
+				
+				<option value="file8">./business-service/internal/logic/var_store.go (100.0%)</option>
+				
+				<option value="file9">./business-service/internal/server/business_manager.go (0.0%)</option>
+				
+				<option value="file10">./business-service/internal/server/handlers/process.go (0.0%)</option>
+				
+				<option value="file11">./business-service/internal/server/server.go (0.0%)</option>
+				
+				<option value="file12">./business-service/internal/signals/shutdown.go (0.0%)</option>
+				
+				<option value="file13">./dashboard-service/cmd/main.go (0.0%)</option>
+				
+				<option value="file14">./dashboard-service/internal/config/config.go (0.0%)</option>
+				
+				<option value="file15">./dashboard-service/internal/kafka/connection.go (0.0%)</option>
+				
+				<option value="file16">./dashboard-service/internal/kafka/consumer/business.go (0.0%)</option>
+				
+				<option value="file17">./dashboard-service/internal/kafka/consumer/consumer.go (0.0%)</option>
+				
+				<option value="file18">./dashboard-service/internal/kafka/consumer/logger.go (0.0%)</option>
+				
+				<option value="file19">./dashboard-service/internal/kafka/consumer/mock.go (0.0%)</option>
+				
+				<option value="file20">./dashboard-service/internal/signals/shutdown.go (0.0%)</option>
+				
+				<option value="file21">./dashboard-service/internal/ws/handler.go (0.0%)</option>
+				
+				<option value="file22">./dashboard-service/internal/ws/http.go (0.0%)</option>
+				
+				<option value="file23">./http-service/cmd/docs/docs.go (0.0%)</option>
+				
+				<option value="file24">./http-service/cmd/main.go (0.0%)</option>
+				
+				<option value="file25">./http-service/internal/client/grpc/business/business_client.go (0.0%)</option>
+				
+				<option value="file26">./http-service/internal/client/grpc/business/methods.go (0.0%)</option>
+				
+				<option value="file27">./http-service/internal/client/grpc/log/log_client.go (0.0%)</option>
+				
+				<option value="file28">./http-service/internal/client/grpc/log/methods.go (0.0%)</option>
+				
+				<option value="file29">./http-service/internal/config/config.go (0.0%)</option>
+				
+				<option value="file30">./http-service/internal/server/http_server.go (0.0%)</option>
+				
+				<option value="file31">./http-service/internal/signals/shutdown.go (0.0%)</option>
+				
+				<option value="file32">./http-service/internal/transport/http/handlers/common.go (87.5%)</option>
+				
+				<option value="file33">./http-service/internal/transport/http/handlers/delete.go (89.5%)</option>
+				
+				<option value="file34">./http-service/internal/transport/http/handlers/process.go (86.7%)</option>
+				
+				<option value="file35">./http-service/internal/transport/http/handlers/read.go (90.9%)</option>
+				
+				<option value="file36">./http-service/internal/transport/http/router.go (0.0%)</option>
+				
+				<option value="file37">./http-service/internal/utils/flexstring.go (0.0%)</option>
+				
+				<option value="file38">./http-service/internal/utils/validator.go (90.0%)</option>
+				
+				<option value="file39">./log-service/cmd/main.go (0.0%)</option>
+				
+				<option value="file40">./log-service/internal/clients/kafka/producer.go (0.0%)</option>
+				
+				<option value="file41">./log-service/internal/clients/kafka/writer.go (0.0%)</option>
+				
+				<option value="file42">./log-service/internal/config/config.go (0.0%)</option>
+				
+				<option value="file43">./log-service/internal/logger/CRUD/create_log.go (63.0%)</option>
+				
+				<option value="file44">./log-service/internal/logger/CRUD/delete_log.go (92.7%)</option>
+				
+				<option value="file45">./log-service/internal/logger/CRUD/read_log.go (96.7%)</option>
+				
+				<option value="file46">./log-service/internal/logger/server/log_manager.go (0.0%)</option>
+				
+				<option value="file47">./log-service/internal/logger/server/log_server.go (0.0%)</option>
+				
+				<option value="file48">./log-service/internal/signals/shutdown.go (0.0%)</option>
+				
+				<option value="file49">./log-service/internal/utils/log_id_generator.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "business-service/internal/config"
+        "business-service/internal/server"
+        "business-service/internal/signals"
+        "context"
+        "log"
+)
+
+func main() <span class="cov0" title="0">{
+        cfg := config.Load()
+        ctx, cancel := context.WithCancel(context.Background())
+        defer cancel()
+
+        server.RunBusinessServer(cfg)
+
+        signals.WaitForShutdown(ctx, cancel)
+
+        log.Println("Shutting down server...")
+
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package log
+
+import (
+        "business-service/gen"
+        "business-service/internal/config"
+        "context"
+        "fmt"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        "log"
+        "time"
+)
+
+const connectionError = "rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 127.0.0.1:9090: connect: connection refused\""
+
+type LogClient struct {
+        LoggerClient gen.LoggerClient
+}
+
+func CreateLogClient(cfg *config.Config) *LogClient <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(cfg.LoggerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("failed to connect to log server: %v", err)
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">client := &amp;LogClient{
+                LoggerClient: gen.NewLoggerClient(conn),
+        }
+
+        resp, err := LogHandshake(client)
+
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println(err.Error())
+                fmt.Println()
+
+                if err.Error() == connectionError </span><span class="cov0" title="0">{
+                        log.Println("Log server connection error")
+                        return nil
+                }</span> else<span class="cov0" title="0"> {
+                        log.Printf("log server connected, but test message failed: %v", err)
+                        return nil
+                }</span>
+        }
+        <span class="cov0" title="0">log.Printf("Log server handshake successful, log ID: %v", resp.GetId())
+
+        return client</span>
+}
+
+func LogHandshake(client *LogClient) (*gen.LogCreationResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+        defer cancel()
+
+        testEntry := &amp;gen.LogEntry{
+                TimestampSend: time.Now().UnixMilli(),
+                Message: &amp;gen.StructuredMessage{
+                        Method: "POST",
+                        Path:   "/process",
+                        Body: []*gen.Operation{
+                                {
+                                        Type:  "Test type",
+                                        Op:    "Test operation",
+                                        Var:   "Test variable",
+                                        Left:  "Test Left",
+                                        Right: "Test Right",
+                                },
+                        },
+                        Result: &amp;gen.OperationResponse{
+                                Items: []*gen.VariableValue{
+                                        {
+                                                Var:   "Test var",
+                                                Value: 999,
+                                        },
+                                },
+                        },
+                },
+                Metadata: map[string]string{
+                        "test": "true",
+                },
+                ServiceName: "business-server",
+                Level:       "DEBUG",
+        }
+
+        return client.LoggerClient.HandleIncomingLog(ctx, testEntry)
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package log
+
+import (
+        "business-service/gen"
+        "context"
+        "fmt"
+        "time"
+)
+
+func (c *LogClient) LogDataGRPC(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+        defer cancel()
+
+        resp, err := c.LoggerClient.HandleIncomingLog(ctx, entry)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to send log to gRPC server: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return resp.Id, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package kafka
+
+import (
+        "context"
+        "encoding/base64"
+        kafka "github.com/segmentio/kafka-go"
+        "log"
+        "os"
+        "time"
+)
+
+func PublishAlgoGraph(broker, topic, path string) <span class="cov0" title="0">{
+        writer := NewKafkaWriter(broker, topic)
+        encoded, err := encodeFile(path)
+
+        ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+        defer cancel()
+
+        err = writer.WriteMessages(ctx, kafka.Message{
+                Key:   []byte("image"),
+                Value: []byte(encoded),
+        })
+
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Ошибка при отправке картинки: %v\n", err)
+        }</span> else<span class="cov0" title="0"> {
+                log.Println("Картинка успешно отправлено")
+        }</span>
+
+        <span class="cov0" title="0">writer.Close()</span>
+
+}
+
+func encodeFile(path string) (string, error) <span class="cov0" title="0">{
+        data, err := os.ReadFile(path)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Ошибка чтения файла: %v\n", err)
+                return "", err
+        }</span>
+        <span class="cov0" title="0">return base64.StdEncoding.EncodeToString(data), err</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package kafka
+
+import "github.com/segmentio/kafka-go"
+
+func NewKafkaWriter(broker, topic string) *kafka.Writer <span class="cov0" title="0">{
+        return &amp;kafka.Writer{
+                Addr:         kafka.TCP(broker),
+                Topic:        topic,
+                Balancer:     &amp;kafka.LeastBytes{},
+                RequiredAcks: kafka.RequireAll,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package config
+
+import (
+        "github.com/joho/godotenv"
+        "log"
+        "os"
+)
+
+type Config struct {
+        LoggerAddr   string
+        BusinessAddr string
+        KafkaBroker  string
+        KafkaTopic   string
+}
+
+func Load() *Config <span class="cov0" title="0">{
+
+        if err := godotenv.Load(); err != nil </span><span class="cov0" title="0">{
+                log.Println("No .env file found — assuming prod environment")
+        }</span>
+
+        <span class="cov0" title="0">return &amp;Config{
+                LoggerAddr:   os.Getenv("LOGGER_ADDR"),
+                BusinessAddr: os.Getenv("BUSINESS_ADDR"),
+                KafkaBroker:  os.Getenv("KAFKA_BROKER"),
+                KafkaTopic:   os.Getenv("KAFKA_TOPIC"),
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package logic
+
+import (
+        "business-service/gen"
+        "fmt"
+        "os"
+        "strings"
+)
+
+func ExportToDOT(ops []*gen.Operation, alive map[string]bool, graph map[string][]string, filename string) error <span class="cov0" title="0">{
+        var sb strings.Builder
+        sb.WriteString("digraph G {\n")
+        sb.WriteString("  rankdir=LR;\n")
+        sb.WriteString("  node [shape=box, style=filled];\n")
+
+        // Узлы (только нечисловые)
+        for _, op := range ops </span><span class="cov0" title="0">{
+                color := "lightgrey"
+                label := op.Var
+
+                if op.Type == "print" </span><span class="cov0" title="0">{
+                        color = "lightgreen"
+                        label += "\\n[PRINT]"
+                }</span> else<span class="cov0" title="0"> if alive[op.Var] </span><span class="cov0" title="0">{
+                        color = "lightblue"
+                }</span> else<span class="cov0" title="0"> {
+                        color = "mistyrose"
+                }</span>
+
+                <span class="cov0" title="0">sb.WriteString(fmt.Sprintf("  \"%s\" [label=\"%s\", fillcolor=%s];\n", op.Var, label, color))</span>
+        }
+
+        // Рёбра (по уже готовому графу)
+        <span class="cov0" title="0">for from, deps := range graph </span><span class="cov0" title="0">{
+                for _, to := range deps </span><span class="cov0" title="0">{
+                        sb.WriteString(fmt.Sprintf("  \"%s\" -&gt; \"%s\";\n", to, from))
+                }</span>
+        }
+
+        <span class="cov0" title="0">sb.WriteString("}\n")
+        return os.WriteFile(filename, []byte(sb.String()), 0644)</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package logic
+
+import (
+        "business-service/gen"
+        "container/list"
+        "fmt"
+        "strconv"
+        "sync"
+        "time"
+)
+
+func Process(operations []*gen.Operation, required map[string]bool) ([]*gen.VariableValue, []string) <span class="cov8" title="1">{
+        vars := NewVarStore()
+        var result []*gen.VariableValue
+        brokenVars := make([]string, 0, 10)
+
+        var wg sync.WaitGroup
+        mu := &amp;sync.Mutex{}
+
+        pending := append([]*gen.Operation{}, operations...)
+
+        for </span><span class="cov8" title="1">{
+
+                var (
+                        progress  bool
+                        remaining []*gen.Operation
+                        readyOps  []*gen.Operation
+                )
+
+                remaining, readyOps = devideOperations(pending, required, vars)
+
+                if len(readyOps) == 0 </span><span class="cov8" title="1">{
+                        break</span>
+                }
+
+                <span class="cov8" title="1">for _, op := range readyOps </span><span class="cov8" title="1">{
+                        wg.Add(1)
+                        go func(op *gen.Operation) </span><span class="cov8" title="1">{
+                                defer wg.Done()
+                                if doCalc(vars, op.GetVar(), op.GetLeft(), op.GetRight(), op.GetOp()) </span><span class="cov8" title="1">{
+                                        mu.Lock()
+                                        progress = true // Дает возможность добавить доп. условия
+                                        mu.Unlock()
+                                }</span>
+                        }(op)
+                }
+
+                <span class="cov8" title="1">wg.Wait()
+
+                if !progress </span><span class="cov0" title="0">{
+                        break</span>
+                }
+
+                <span class="cov8" title="1">pending = remaining</span>
+        }
+
+        <span class="cov8" title="1">processPrint(vars, &amp;result, operations, &amp;brokenVars)
+        fmt.Println(result)
+        return result, brokenVars</span>
+}
+
+func processPrint(vars *VarStore, result *[]*gen.VariableValue, operations []*gen.Operation, brokenVars *[]string) <span class="cov8" title="1">{
+        for _, op := range operations </span><span class="cov8" title="1">{
+                if op.GetType() == "print" </span><span class="cov8" title="1">{
+                        doPrint(vars, result, op.GetVar(), brokenVars)
+                }</span>
+        }
+}
+
+func devideOperations(pending []*gen.Operation, required map[string]bool, vars *VarStore) (remaining []*gen.Operation, readyOps []*gen.Operation) <span class="cov8" title="1">{
+        for _, op := range pending </span><span class="cov8" title="1">{
+                if op.GetType() != "calc" || !required[op.GetVar()] </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">if doCalcReady(vars, op.GetLeft(), op.GetRight()) </span><span class="cov8" title="1">{
+                        readyOps = append(readyOps, op)
+                }</span> else<span class="cov0" title="0"> {
+                        remaining = append(remaining, op)
+                }</span>
+        }
+        <span class="cov8" title="1">return remaining, readyOps</span>
+}
+
+func FindAliveVariables(operations []*gen.Operation) (map[string]bool, map[string][]string) <span class="cov8" title="1">{
+        graph := map[string][]string{}
+        required := map[string]bool{}
+        queue := list.New()
+
+        for _, op := range operations </span><span class="cov8" title="1">{
+                fmt.Println(op)
+                // Сначала строим граф зависимостей. Если в расчете один из элементов - переменная, то var зависит от нее
+                if op.GetType() == "calc" </span><span class="cov8" title="1">{
+                        if !isNumber(op.GetLeft()) </span><span class="cov8" title="1">{
+                                graph[op.GetVar()] = append(graph[op.GetVar()], op.GetLeft())
+                        }</span>
+                        <span class="cov8" title="1">if !isNumber(op.GetRight()) </span><span class="cov8" title="1">{
+                                graph[op.GetVar()] = append(graph[op.GetVar()], op.GetRight())
+                        }</span>
+                } else<span class="cov8" title="1"> if op.GetType() == "print" </span><span class="cov8" title="1">{
+                        varName := op.GetVar()
+                        required[varName] = true
+                        queue.PushBack(varName)
+                        fmt.Println("                Добавили в очередь:", varName)
+                }</span>
+        }
+
+        <span class="cov8" title="1">fmt.Println("Итоговая Очередь:", queue)
+        fmt.Println("Начинаем обход графа...")
+
+        for queue.Len() &gt; 0 </span><span class="cov8" title="1">{
+                curr := queue.Front().Value.(string)
+                queue.Remove(queue.Front())
+                for _, dep := range graph[curr] </span><span class="cov8" title="1">{
+                        fmt.Printf("        Зависимость %s", dep)
+                        if !required[dep] </span><span class="cov8" title="1">{
+                                required[dep] = true
+                                queue.PushBack(dep)
+                        }</span>
+                }
+        }
+
+        <span class="cov8" title="1">fmt.Println(graph)
+        return required, graph</span>
+}
+
+func doCalc(vars *VarStore, variable, left, right, op string) bool <span class="cov8" title="1">{
+        time.Sleep(50 * time.Millisecond) // симуляция задержки
+
+        if _, ok := vars.Get(variable); ok </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">leftVal, err1 := parseOperand(left, vars)
+        rightVal, err2 := parseOperand(right, vars)
+        if err1 != nil || err2 != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">var result int
+        switch op </span>{
+        case "+":<span class="cov8" title="1">
+                result = leftVal + rightVal</span>
+        case "-":<span class="cov0" title="0">
+                result = leftVal - rightVal</span>
+        case "*":<span class="cov0" title="0">
+                result = leftVal * rightVal</span>
+        default:<span class="cov0" title="0">
+                return false</span>
+        }
+
+        <span class="cov8" title="1">vars.Set(variable, result)
+        return true</span>
+}
+
+func parseOperand(op string, vars *VarStore) (int, error) <span class="cov8" title="1">{
+        val, err := strconv.Atoi(op)
+        if err == nil </span><span class="cov8" title="1">{
+                return val, nil
+        }</span>
+
+        <span class="cov0" title="0">if v, ok := vars.Get(op); ok </span><span class="cov0" title="0">{
+                return v, nil
+        }</span>
+        <span class="cov0" title="0">return 0, fmt.Errorf("неизвестная переменная: %s", op)</span>
+}
+
+func doPrint(vars *VarStore, results *[]*gen.VariableValue, variable string, brokenVars *[]string) <span class="cov8" title="1">{
+        if val, ok := vars.Get(variable); ok </span><span class="cov8" title="1">{
+                *results = append(*results, &amp;gen.VariableValue{
+                        Var:   variable,
+                        Value: int64(val),
+                })
+        }</span> else<span class="cov8" title="1"> {
+                *results = append(*results, &amp;gen.VariableValue{
+                        Var:   variable,
+                        Value: 0,
+                })
+                *brokenVars = append(*brokenVars, variable)
+        }</span>
+}
+
+func isNumber(s string) bool <span class="cov8" title="1">{
+        _, err := strconv.Atoi(s)
+        return err == nil
+}</span>
+
+func doCalcReady(vars *VarStore, left, right string) bool <span class="cov8" title="1">{
+        isReady := func(s string) bool </span><span class="cov8" title="1">{
+                if isNumber(s) </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+                <span class="cov0" title="0">_, ok := vars.Get(s)
+                return ok</span>
+        }
+
+        <span class="cov8" title="1">return isReady(left) &amp;&amp; isReady(right)</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package logic
+
+import "sync"
+
+type VarStore struct {
+        data map[string]int
+        mu   sync.RWMutex
+}
+
+func NewVarStore() *VarStore <span class="cov8" title="1">{
+        return &amp;VarStore{
+                data: make(map[string]int, 20),
+        }
+}</span>
+
+func (s *VarStore) Set(name string, value int) <span class="cov8" title="1">{
+        s.mu.Lock()
+        defer s.mu.Unlock()
+        s.data[name] = value
+}</span>
+
+func (s *VarStore) Get(name string) (int, bool) <span class="cov8" title="1">{
+        s.mu.RLock()
+        defer s.mu.RUnlock()
+        val, ok := s.data[name]
+        return val, ok
+}</span>
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package server
+
+import (
+        "business-service/internal/clients/grpc/log"
+        blm "business-service/internal/server/handlers"
+)
+
+func newBusinessLogicManager(logClient *log.LogClient) *blm.BusinessLogicManager <span class="cov0" title="0">{
+        return &amp;blm.BusinessLogicManager{
+                GRPCClient: logClient,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package server
+
+import (
+        "business-service/gen"
+        logGRPC "business-service/internal/clients/grpc/log"
+        "business-service/internal/clients/kafka"
+        "business-service/internal/config"
+        "business-service/internal/logic"
+        "context"
+        "fmt"
+        "google.golang.org/protobuf/types/known/durationpb"
+        "os/exec"
+        "reflect"
+        "strings"
+        "time"
+)
+
+type BusinessLogicManager struct {
+        gen.UnimplementedBusinessLogicServer
+        GRPCClient *logGRPC.LogClient
+}
+
+func (blm *BusinessLogicManager) Process(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error) <span class="cov0" title="0">{
+
+        cfg := config.Load()
+
+        operations := req.GetOperations()
+
+        aliveVars, graph := logic.FindAliveVariables(operations)
+
+        err := logic.ExportToDOT(operations, aliveVars, graph, "graph.dot")
+
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println("Error during export:", err)
+        }</span> else<span class="cov0" title="0"> {
+                cmd := exec.Command("dot", "-Tpng", "graph.dot", "-o", "graph.png")
+                if err := cmd.Run(); err != nil </span><span class="cov0" title="0">{
+                        fmt.Println("Error generating PNG:", err)
+                }</span> else<span class="cov0" title="0"> {
+                        fmt.Println("graph.png successfully generated")
+                        kafka.PublishAlgoGraph(cfg.KafkaBroker, cfg.KafkaTopic, "graph.png")
+                }</span>
+        }
+
+        <span class="cov0" title="0">start := time.Now()
+        fmt.Println("Программа запущена")
+        resultItems, brokenItems := logic.Process(operations, aliveVars)
+
+        elapsed := time.Since(start)
+        fmt.Printf("Время выполнения: %s\n", elapsed)
+
+        resp := &amp;gen.OperationResponse{
+                Items: resultItems,
+        }
+
+        entry := formLogEntry(req, resp)
+
+        if blm.GRPCClient == nil </span><span class="cov0" title="0">{
+                fmt.Println("GRPCClient is nil — log clients not initialized... Proceeding without it")
+        }</span>
+        <span class="cov0" title="0">if blm.GRPCClient != nil &amp;&amp; !isNil(blm.GRPCClient.LoggerClient) </span><span class="cov0" title="0">{
+                responseLog, err := blm.GRPCClient.LogDataGRPC(ctx, entry)
+                if err != nil </span><span class="cov0" title="0">{
+                        fmt.Println("Something went wrong during logging: ", err.Error())
+                }</span>
+                <span class="cov0" title="0">fmt.Println("Log of the result: " + responseLog.GetId())
+
+                resp.LogID = responseLog</span>
+
+        }
+
+        <span class="cov0" title="0">resp.ProcessingTime = durationpb.New(elapsed)
+
+        if len(brokenItems) != 0 </span><span class="cov0" title="0">{
+                warningText := fmt.Sprintf("WARNING: variable(s) %s called for print before calculation", strings.Join(brokenItems, ", "))
+                resp.Warning = &amp;warningText
+        }</span>
+
+        <span class="cov0" title="0">fmt.Println(resp.GetWarning())
+
+        return resp, nil</span>
+
+}
+
+func formLogEntry(req *gen.OperationRequest, opsResp *gen.OperationResponse) *gen.LogEntry <span class="cov0" title="0">{
+
+        return &amp;gen.LogEntry{
+                ServiceName: "business-server",
+                Level:       "INFO",
+                Message: &amp;gen.StructuredMessage{
+                        Path:   req.GetLogID().GetId(),
+                        Result: opsResp,
+                },
+                Metadata:      nil,
+                TimestampSend: 0,
+        }
+}</span>
+
+func isNil(i interface{}) bool <span class="cov0" title="0">{
+        if i == nil </span><span class="cov0" title="0">{
+                return true
+        }</span>
+        <span class="cov0" title="0">switch v := reflect.ValueOf(i); v.Kind() </span>{
+        case reflect.Ptr, reflect.Interface, reflect.Slice, reflect.Map, reflect.Chan, reflect.Func:<span class="cov0" title="0">
+                return v.IsNil()</span>
+        }
+        <span class="cov0" title="0">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package server
+
+import (
+        "business-service/gen"
+        grpcClient "business-service/internal/clients/grpc/log"
+        "business-service/internal/config"
+        "google.golang.org/grpc"
+        "log"
+        "net"
+)
+
+func RunBusinessServer(cfg *config.Config) <span class="cov0" title="0">{
+        lis, err := net.Listen("tcp", cfg.BusinessAddr)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to listen: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">log.Printf("Starting business logic server on :%s", cfg.BusinessAddr)
+
+        logClient := grpcClient.CreateLogClient(cfg)
+
+        if err := StartGRPCServer(lis, newBusinessLogicManager(logClient)); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to serve: %v", err)
+        }</span>
+}
+
+func StartGRPCServer(listener net.Listener, businessServer gen.BusinessLogicServer) error <span class="cov0" title="0">{
+        s := grpc.NewServer()
+        gen.RegisterBusinessLogicServer(s, businessServer)
+        return s.Serve(listener)
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package signals
+
+import (
+        "context"
+        "os"
+        "os/signal"
+        "syscall"
+)
+
+func WaitForShutdown(ctx context.Context, cancel context.CancelFunc) <span class="cov0" title="0">{
+        sig := make(chan os.Signal, 1)
+
+        signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+
+        select </span>{
+        case s := &lt;-sig:<span class="cov0" title="0">
+                println("Получен сигнал:", s.String())
+                cancel()</span>
+        case &lt;-ctx.Done():<span class="cov0" title="0">
+                return</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package main
+
+import (
+        "context"
+        "dashboard-service/internal/config"
+        "dashboard-service/internal/kafka"
+        "dashboard-service/internal/kafka/consumer"
+        "dashboard-service/internal/signals"
+        wscd "dashboard-service/internal/ws"
+        "github.com/gorilla/websocket"
+        "log"
+)
+
+func main() <span class="cov0" title="0">{
+
+        cfg := config.Load()
+        ctx, cancel := context.WithCancel(context.Background())
+        defer cancel()
+
+        kafkaConn, err := kafka.Connect(ctx, cfg)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err)
+        }</span>
+        <span class="cov0" title="0">defer kafkaConn.Close()
+        clients := &amp;wscd.Clients{Clients: make(map[*websocket.Conn]bool)}
+
+        go wscd.StartWebSocket(clients, cfg)
+        go consumer.StartAll(clients, ctx, cfg.KafkaAddr)
+
+        log.Println("dashboard-service is running...")
+
+        signals.WaitForShutdown(ctx, cancel)</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package config
+
+import (
+        "github.com/joho/godotenv"
+        "log"
+        "os"
+)
+
+type Config struct {
+        WsAddr    string
+        ImageDir  string
+        KafkaAddr string
+        BizTopic  string
+        LogTopic  string
+}
+
+func Load() *Config <span class="cov0" title="0">{
+
+        if err := godotenv.Load(); err != nil </span><span class="cov0" title="0">{
+                log.Println("No .env file found — assuming prod environment")
+        }</span>
+
+        <span class="cov0" title="0">return &amp;Config{
+                WsAddr:    os.Getenv("WS_ADDR"),
+                KafkaAddr: os.Getenv("KAFKA_ADDR"),
+                ImageDir:  os.Getenv("STATIC_DIR"),
+                BizTopic:  os.Getenv("BUSINESS_TOPIC"),
+                LogTopic:  os.Getenv("LOG_TOPIC"),
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package kafka
+
+import (
+        "context"
+        "dashboard-service/internal/config"
+        "fmt"
+        "github.com/segmentio/kafka-go"
+        "log"
+        "time"
+)
+
+func Connect(ctx context.Context, cfg *config.Config) (*kafka.Conn, error) <span class="cov0" title="0">{
+        dialer := kafka.Dialer{
+                Timeout:   10 * time.Second,
+                DualStack: true,
+        }
+
+        conn, err := dialer.DialContext(ctx, "tcp", cfg.KafkaAddr)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("не удалось подключиться к Kafka: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">topics := []kafka.TopicConfig{
+                {
+                        Topic:             cfg.LogTopic,
+                        NumPartitions:     1,
+                        ReplicationFactor: 1,
+                },
+                {
+                        Topic:             cfg.BizTopic,
+                        NumPartitions:     1,
+                        ReplicationFactor: 1,
+                },
+        }
+
+        err = conn.CreateTopics(topics...)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to create topics: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">fmt.Println("Topics created successfully")
+
+        return conn, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package consumer
+
+import (
+        wscd "dashboard-service/internal/ws"
+        "encoding/base64"
+        "log"
+)
+
+type BizHandler struct{}
+
+func (b *BizHandler) Handle(encoded []byte) []byte <span class="cov0" title="0">{
+        data, err := decodeBase64(encoded)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Ошибка декодирования base64: %v\n", err)
+                return nil
+        }</span>
+        <span class="cov0" title="0">return data</span>
+}
+
+func (b *BizHandler) Broadcast(data []byte, clients *wscd.Clients) <span class="cov0" title="0">{
+        wscd.BroadcastImage(data, clients)
+}</span>
+
+func decodeBase64(encoded []byte) ([]byte, error) <span class="cov0" title="0">{
+        return base64.StdEncoding.DecodeString(string(encoded))
+}</span>
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package consumer
+
+import (
+        "context"
+        wscd "dashboard-service/internal/ws"
+        "github.com/segmentio/kafka-go"
+        "log"
+)
+
+type KafkaMessageHandler interface {
+        Handle(msg []byte) []byte
+        Broadcast(data []byte, clients *wscd.Clients)
+}
+
+func StartAll(clients *wscd.Clients, ctx context.Context, broker string) <span class="cov0" title="0">{
+        StartConsumer(ctx, broker, "alg_graph_pic", "dashbord-service", &amp;BizHandler{}, clients)
+        StartConsumer(ctx, broker, "operation_log", "dashbord-service", &amp;LogHandler{}, clients)
+}</span>
+
+func StartConsumer(
+        ctx context.Context,
+        broker,
+        topic string,
+        groupID string,
+        handler KafkaMessageHandler,
+        clients *wscd.Clients) <span class="cov0" title="0">{
+        r := kafka.NewReader(kafka.ReaderConfig{
+                Brokers:  []string{broker},
+                Topic:    topic,
+                GroupID:  groupID,
+                MinBytes: 1,
+                MaxBytes: 10e6,
+        })
+
+        go func() </span><span class="cov0" title="0">{
+                defer r.Close()
+                for </span><span class="cov0" title="0">{
+                        m, err := r.ReadMessage(ctx)
+                        if err != nil </span><span class="cov0" title="0">{
+                                if ctx.Err() != nil </span><span class="cov0" title="0">{
+                                        log.Printf("%s: context canceled, shutting down", topic)
+                                }</span> else<span class="cov0" title="0"> {
+                                        log.Printf("%s: error: %v", topic, err)
+                                }</span>
+                                <span class="cov0" title="0">break</span>
+                        }
+                        <span class="cov0" title="0">data := handler.Handle(m.Value)
+                        if data != nil </span><span class="cov0" title="0">{
+                                handler.Broadcast(data, clients)
+                        }</span>
+                }
+        }()
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package consumer
+
+import (
+        "dashboard-service/gen"
+        wscd "dashboard-service/internal/ws"
+        "fmt"
+        "google.golang.org/protobuf/encoding/protojson"
+        "google.golang.org/protobuf/proto"
+)
+
+type LogHandler struct{}
+
+func (l *LogHandler) Handle(data []byte) []byte <span class="cov0" title="0">{
+        return data
+}</span>
+
+func (l *LogHandler) Broadcast(data []byte, clients *wscd.Clients) <span class="cov0" title="0">{
+        var message gen.StructuredMessage
+        err := proto.Unmarshal(data, &amp;message)
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println("Failed to parse: ", err)
+        }</span>
+
+        <span class="cov0" title="0">jsonData, err := protojson.Marshal(&amp;message)
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println("Failed to convert to JSON:", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">wscd.BroadcastOperation(jsonData, clients)</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package consumer
+
+import wscd "dashboard-service/internal/ws"
+
+type MockHandler struct {
+        HandleFunc    func(msg []byte) []byte
+        BroadcastFunc func(data []byte, clients *wscd.Clients)
+}
+
+func (m *MockHandler) Handle(msg []byte) []byte <span class="cov0" title="0">{
+        if m.HandleFunc != nil </span><span class="cov0" title="0">{
+                return m.HandleFunc(msg)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (m *MockHandler) Broadcast(data []byte, clients *wscd.Clients) <span class="cov0" title="0">{
+        if m.BroadcastFunc != nil </span><span class="cov0" title="0">{
+                m.BroadcastFunc(data, clients)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package signals
+
+import (
+        "context"
+        "os"
+        "os/signal"
+        "syscall"
+)
+
+func WaitForShutdown(ctx context.Context, cancel context.CancelFunc) <span class="cov0" title="0">{
+        sig := make(chan os.Signal, 1)
+
+        signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+
+        select </span>{
+        case s := &lt;-sig:<span class="cov0" title="0">
+                println("Получен сигнал:", s.String())
+                cancel()</span>
+        case &lt;-ctx.Done():<span class="cov0" title="0">
+                return</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package wscd
+
+import (
+        "log"
+        "net/http"
+)
+
+func handleConnections(clients *Clients) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                conn, err := upgrader.Upgrade(w, r, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Println("Upgrade error:", err)
+                        return
+                }</span>
+                <span class="cov0" title="0">defer conn.Close()
+                clients.AddClient(conn)
+                log.Println("New WebSocket clients connected:")
+
+                for </span><span class="cov0" title="0">{
+                        _, _, err = conn.ReadMessage()
+                        if err != nil </span><span class="cov0" title="0">{
+                                log.Println("Client disconnected: ", err)
+                                clients.DeleteClient(conn)
+                        }</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package wscd
+
+import (
+        "dashboard-service/internal/config"
+        "fmt"
+        "github.com/gorilla/websocket"
+        "log"
+        "net/http"
+        "sync"
+)
+
+// Мапа для активных клиентов
+
+type Clients struct {
+        Clients   map[*websocket.Conn]bool
+        clientsMu sync.Mutex
+}
+
+func (c *Clients) AddClient(conn *websocket.Conn) <span class="cov0" title="0">{
+        c.clientsMu.Lock()
+        c.Clients[conn] = true
+        c.clientsMu.Unlock()
+}</span>
+
+func (c *Clients) DeleteClient(conn *websocket.Conn) <span class="cov0" title="0">{
+        c.clientsMu.Lock()
+        delete(c.Clients, conn)
+        c.clientsMu.Unlock()
+}</span>
+
+func StartWebSocket(clients *Clients, cfg *config.Config) <span class="cov0" title="0">{
+
+        http.HandleFunc("/ws", handleConnections(clients)) // обработчик WebSocket
+
+        http.HandleFunc("/", htmlHandler()) // обработчик главной страницы
+
+        fmt.Printf("web socket is running on %s\n", cfg.WsAddr)
+        err := http.ListenAndServe(cfg.WsAddr, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal(err)
+        }</span>
+}
+
+var upgrader = websocket.Upgrader{
+        ReadBufferSize:  1024,
+        WriteBufferSize: 1024,
+}
+
+func htmlHandler() http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                w.Header().Set("Content-Type", "text/html")
+                html := `&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;WebSocket Image and Log Viewer&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        img {
+            max-width: 90%;
+            height: auto;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        pre {
+            text-align: left;
+            max-width: 90%;
+            margin: 0 auto;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;WebSocket Image and Log Viewer&lt;/h1&gt;
+    &lt;img id="wsImage" alt="Waiting for image..." /&gt;
+    &lt;pre id="wsText"&gt;Waiting for logs...&lt;/pre&gt;
+
+    &lt;script&gt;
+        const ws = new WebSocket("ws://" + location.host + "/ws");
+        ws.binaryType = "arraybuffer";
+
+        ws.onmessage = function(event) {
+            if (typeof event.data === "string") {
+                // Text message (e.g., protobuf String or JSON)
+                try {
+                    const json = JSON.parse(event.data);
+                    document.getElementById("wsText").textContent = JSON.stringify(json, null, 2);
+                } catch (e) {
+                    document.getElementById("wsText").textContent = event.data;
+                }
+            } else {
+                // Binary message (image)
+                const blob = new Blob([event.data], { type: "image/jpeg" });
+                const url = URL.createObjectURL(blob);
+                document.getElementById("wsImage").src = url;
+            }
+        };
+
+        ws.onclose = function() {
+            console.log("WebSocket connection closed");
+        };
+
+        ws.onerror = function(err) {
+            console.error("WebSocket error:", err);
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        `
+                w.Write([]byte(html))
+        }</span>
+}
+
+func BroadcastImage(imageData []byte, clients *Clients) <span class="cov0" title="0">{
+        clients.clientsMu.Lock()
+        defer clients.clientsMu.Unlock()
+
+        for client := range clients.Clients </span><span class="cov0" title="0">{
+                err := client.WriteMessage(websocket.BinaryMessage, imageData)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Println("Broadcast error:", err)
+                        client.Close()
+                        delete(clients.Clients, client)
+                }</span>
+        }
+}
+
+func BroadcastOperation(operationData []byte, clients *Clients) <span class="cov0" title="0">{
+        clients.clientsMu.Lock()
+        defer clients.clientsMu.Unlock()
+
+        for client := range clients.Clients </span><span class="cov0" title="0">{
+                err := client.WriteMessage(websocket.TextMessage, operationData)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Println("Broadcast error:", err)
+                        client.Close()
+                        delete(clients.Clients, client)
+                }</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file23" style="display: none">// Package docs Code generated by swaggo/swag. DO NOT EDIT
+package docs
+
+import "github.com/swaggo/swag"
+
+const docTemplate = `{
+    "schemes": {{ marshal .Schemes }},
+    "swagger": "2.0",
+    "info": {
+        "description": "{{escape .Description}}",
+        "title": "{{.Title}}",
+        "contact": {},
+        "version": "{{.Version}}"
+    },
+    "host": "{{.Host}}",
+    "basePath": "{{.BasePath}}",
+    "paths": {}
+}`
+
+// SwaggerInfo holds exported Swagger Info so clients can modify it
+var SwaggerInfo = &amp;swag.Spec{
+        Version:          "",
+        Host:             "",
+        BasePath:         "",
+        Schemes:          []string{},
+        Title:            "",
+        Description:      "",
+        InfoInstanceName: "swagger",
+        SwaggerTemplate:  docTemplate,
+        LeftDelim:        "{{",
+        RightDelim:       "}}",
+}
+
+func init() <span class="cov0" title="0">{
+        swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
+}</span>
+</pre>
+		
+		<pre class="file" id="file24" style="display: none">package main
+
+import (
+        "context"
+        "http-service/internal/app"
+        grpcBiz "http-service/internal/client/grpc/business"
+        grpcLog "http-service/internal/client/grpc/log"
+        "http-service/internal/config"
+        "http-service/internal/server"
+        "http-service/internal/signals"
+        _ "http-service/internal/transport/http"
+)
+
+func main() <span class="cov0" title="0">{
+        ctx, cancel := context.WithCancel(context.Background())
+        defer cancel()
+
+        cfg := config.Load()
+
+        clients := &amp;app.Clients{
+                LogClient:      grpcLog.CreateLogClient(cfg),
+                BusinessClient: grpcBiz.CreateBusinessClient(cfg),
+        }
+
+        go server.RunHttpServer(clients, cfg)
+
+        signals.WaitForShutdown(ctx, cancel)
+}</span>
+</pre>
+		
+		<pre class="file" id="file25" style="display: none">package business
+
+import (
+        "context"
+        "fmt"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        gen "http-service/gen"
+        "http-service/internal/config"
+        "log"
+        "time"
+)
+
+const connectionError = "rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 127.0.0.1:9091: connect: connection refused\""
+
+type BusinessClient struct {
+        GRPCClient gen.BusinessLogicClient // Wrap GRPCclient
+}
+
+func CreateBusinessClient(cfg *config.Config) *BusinessClient <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(cfg.BusinessAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to connect to business server: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">client := &amp;BusinessClient{
+                GRPCClient: gen.NewBusinessLogicClient(conn),
+        }
+
+        ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
+        defer cancel()
+
+        testEntry := createTestEntry()
+
+        resp, err := client.GRPCClient.Process(ctx, testEntry)
+
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println(err.Error())
+
+                if err.Error() == connectionError </span><span class="cov0" title="0">{
+                        log.Println("Business server connection error")
+                        return nil
+                }</span> else<span class="cov0" title="0"> {
+                        log.Printf("Business server connected, but test message failed: %v", err)
+                        return nil
+                }</span>
+        }
+
+        <span class="cov0" title="0">log.Printf("Handshake successful, response: %v", resp)
+
+        return client</span>
+
+}
+
+func createTestEntry() (testEntry *gen.OperationRequest) <span class="cov0" title="0">{
+        testOperationCalc := &amp;gen.Operation{
+                Type:  "Test calc",
+                Op:    "Test +",
+                Var:   "Test var x",
+                Left:  "Test 2",
+                Right: "Test 3",
+        }
+
+        testOperationPrint := &amp;gen.Operation{
+                Type: "Test print",
+                Var:  "test x",
+        }
+
+        testEntry = &amp;gen.OperationRequest{Operations: []*gen.Operation{testOperationCalc, testOperationPrint}}
+        return testEntry
+}</span>
+</pre>
+		
+		<pre class="file" id="file26" style="display: none">package business
+
+import (
+        "context"
+        "fmt"
+        gen "http-service/gen"
+        "time"
+)
+
+func (c *BusinessClient) Process(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 40*time.Second)
+        defer cancel()
+
+        resp, err := c.GRPCClient.Process(ctx, req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to call Process: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return resp, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file27" style="display: none">package log
+
+import (
+        "context"
+        "fmt"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        gen "http-service/gen"
+        "http-service/internal/config"
+        "log"
+        "time"
+)
+
+const connectionError = "rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 127.0.0.1:9090: connect: connection refused\""
+
+type LogClient struct {
+        LoggerClient gen.LoggerClient
+}
+
+//type LogicClientInterface interface {
+//        Process(ctx context.Context, req *gen.R) (*gen.Response, error)
+//}
+//
+//var _ LogClientInterface = (*LogClient)(nil) // compile-time check
+
+func CreateLogClient(cfg *config.Config) *LogClient <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(cfg.LoggerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("failed to connect to log server: %v", err)
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">client := &amp;LogClient{
+                LoggerClient: gen.NewLoggerClient(conn),
+        }
+
+        ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+        defer cancel()
+
+        testEntry := &amp;gen.LogEntry{
+                TimestampSend: time.Now().UnixMilli(),
+                Message: &amp;gen.StructuredMessage{
+                        Method: "POST",
+                        Path:   "/process",
+                        Body: []*gen.Operation{
+                                {
+                                        Type:  "Test type",
+                                        Op:    "Test operation",
+                                        Var:   "Test variable",
+                                        Left:  "Test Left",
+                                        Right: "Test Right",
+                                },
+                        },
+                        Result: &amp;gen.OperationResponse{
+                                Items: []*gen.VariableValue{
+                                        {
+                                                Var:   "Test var",
+                                                Value: 999,
+                                        },
+                                },
+                        },
+                },
+                Metadata: map[string]string{
+                        "test": "true",
+                },
+                ServiceName: "HTTP-server",
+                Level:       "DEBUG",
+        }
+
+        resp, err := client.LoggerClient.HandleIncomingLog(ctx, testEntry)
+
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println(err.Error())
+                fmt.Println()
+
+                if err.Error() == connectionError </span><span class="cov0" title="0">{
+                        log.Println("Log server connection error")
+                        return nil
+                }</span> else<span class="cov0" title="0"> {
+                        log.Printf("log server connected, but test message failed: %v", err)
+                        return nil
+                }</span>
+        }
+        <span class="cov0" title="0">log.Printf("Log server handshake successful, log ID: %v", resp.GetId())
+
+        return client</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file28" style="display: none">package log
+
+import (
+        "context"
+        "fmt"
+        gen "http-service/gen"
+        "time"
+)
+
+func (c *LogClient) LogDataGRPC(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+        defer cancel()
+        resp, err := c.LoggerClient.HandleIncomingLog(ctx, entry)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to send log to gRPC server: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return resp.Id, nil</span>
+}
+
+func (c *LogClient) ReadLogGRPC(id string, filename string) (*gen.LogReadingResponse, error) <span class="cov0" title="0">{
+
+        ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+        defer cancel()
+
+        readLogResponse, err := c.LoggerClient.ReadLog(ctx, &amp;gen.LogInfo{
+                Id:       id,
+                Filename: filename,
+        })
+
+        fmt.Println(readLogResponse)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to call ReadLog: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return readLogResponse, err</span>
+
+}
+
+func (c *LogClient) DeleteLogGRPC(id string, filename string) (*gen.LogDeletionResponse, error) <span class="cov0" title="0">{
+
+        ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+        defer cancel()
+
+        deleteResponse, err := c.LoggerClient.DeleteLog(ctx, &amp;gen.LogInfo{
+                Id:       id,
+                Filename: filename,
+        })
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to call ReadLog: %w", err)
+
+        }</span>
+
+        <span class="cov0" title="0">return deleteResponse, err</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file29" style="display: none">package config
+
+import (
+        "github.com/joho/godotenv"
+        "log"
+        "os"
+)
+
+type Config struct {
+        LoggerAddr   string
+        BusinessAddr string
+        HttpAddr     string
+}
+
+func Load() *Config <span class="cov0" title="0">{
+
+        if err := godotenv.Load(); err != nil </span><span class="cov0" title="0">{
+                log.Println("No .env file found — assuming prod environment")
+        }</span>
+
+        <span class="cov0" title="0">return &amp;Config{
+                LoggerAddr:   os.Getenv("LOGGER_ADDR"),
+                BusinessAddr: os.Getenv("BUSINESS_ADR"),
+                HttpAddr:     os.Getenv("HTTP_ADDR"),
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file30" style="display: none">package server
+
+import (
+        "fmt"
+        "http-service/internal/config"
+
+        "http-service/internal/app"
+        "http-service/internal/transport/http"
+        stdHttp "net/http"
+        "time"
+)
+
+func RunHttpServer(app *app.Clients, cfg *config.Config) <span class="cov0" title="0">{
+
+        router := http.NewRouter(app)
+        server := &amp;stdHttp.Server{
+                Addr:           cfg.HttpAddr,
+                Handler:        router,
+                ReadTimeout:    10 * time.Second,
+                WriteTimeout:   10 * time.Second,
+                IdleTimeout:    120 * time.Second,
+                MaxHeaderBytes: 1 &lt;&lt; 20,
+        }
+
+        fmt.Printf("server started on: %s", cfg.HttpAddr)
+        err := server.ListenAndServe()
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println(err)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file31" style="display: none">package signals
+
+import (
+        "context"
+        "os"
+        "os/signal"
+        "syscall"
+)
+
+func WaitForShutdown(ctx context.Context, cancel context.CancelFunc) <span class="cov0" title="0">{
+        sig := make(chan os.Signal, 1)
+
+        signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+
+        select </span>{
+        case s := &lt;-sig:<span class="cov0" title="0">
+                println("Получен сигнал:", s.String())
+                cancel()</span>
+        case &lt;-ctx.Done():<span class="cov0" title="0">
+                return</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file32" style="display: none">package handlers
+
+import (
+        "context"
+        "encoding/json"
+        gen "http-service/gen"
+        "net/http"
+)
+
+type LogEntry struct {
+        Level           string          `json:"level"`
+        Msg             string          `json:"msg"`
+        ID              string          `json:"id"`
+        Message         json.RawMessage `json:"message"`
+        Source          string          `json:"source"`
+        TimestampSend   int64           `json:"timestamp_send"`
+        TimestampRecv   int64           `json:"timestamp_received"`
+        DeliveryDelayMs string          `json:"deliveryDelayMs"`
+}
+
+func writeJSON(w http.ResponseWriter, status int, data any) <span class="cov8" title="1">{
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(status)
+        if err := json.NewEncoder(w).Encode(data); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, "failed to encode response", http.StatusInternalServerError)
+        }</span>
+}
+
+type ErrorResponse struct {
+        Success bool   `json:"success"`
+        Status  int    `json:"status"`
+        Error   string `json:"error"`
+        Reason  string `json:"reason"`
+}
+
+type mockLogClient struct {
+        ReadLogFunc     func(id, filename string) (*gen.LogReadingResponse, error)
+        DeleteLogFunc   func(id, filename string) (*gen.LogDeletionResponse, error)
+        LogDataGRPCFunc func(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error)
+}
+
+func (m *mockLogClient) ReadLogGRPC(id, filename string) (*gen.LogReadingResponse, error) <span class="cov8" title="1">{
+        return m.ReadLogFunc(id, filename)
+}</span>
+
+func (m *mockLogClient) DeleteLogGRPC(id, filename string) (*gen.LogDeletionResponse, error) <span class="cov8" title="1">{
+        return m.DeleteLogFunc(id, filename)
+}</span>
+
+func (m *mockLogClient) LogDataGRPC(ctx context.Context, entry *gen.LogEntry) (*gen.LogID, error) <span class="cov8" title="1">{
+        return m.LogDataGRPCFunc(ctx, entry)
+}</span>
+
+type mockBizClient struct {
+        ProcessFunc func(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error)
+}
+
+func (m *mockBizClient) Process(ctx context.Context, req *gen.OperationRequest) (*gen.OperationResponse, error) <span class="cov8" title="1">{
+        return m.ProcessFunc(ctx, req)
+}</span>
+</pre>
+		
+		<pre class="file" id="file33" style="display: none">package handlers
+
+import (
+        "encoding/json"
+        "github.com/julienschmidt/httprouter"
+        "http-service/internal/app"
+        "net/http"
+)
+
+func DeleteLogHandler(clients *app.Clients) httprouter.Handle <span class="cov8" title="1">{
+        return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) </span><span class="cov8" title="1">{
+                id := r.URL.Query().Get("id")
+                filename := r.URL.Query().Get("filename")
+
+                if id == "" || filename == "" </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusBadRequest, "Missing query parameters: id and filename are required")
+                        return
+                }</span>
+
+                <span class="cov8" title="1">deleteResponse, err := clients.LogClient.DeleteLogGRPC(id, filename)
+
+                if err != nil </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusInternalServerError, "Failed to delete log due to server mailfunction: "+err.Error())
+                        return
+                }</span>
+
+                <span class="cov8" title="1">if !deleteResponse.GetSuccess() </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusInternalServerError, "Failed to delete log: "+deleteResponse.Message)
+                        return
+                }</span>
+
+                <span class="cov8" title="1">deleteLogResponseJSON, err := json.Marshal(deleteResponse)
+                if err != nil </span><span class="cov0" title="0">{
+                        writeJSON(w, http.StatusInternalServerError, "Failed to marshal log: "+err.Error())
+                        return
+                }</span>
+
+                <span class="cov8" title="1">w.Header().Set("Content-Type", "application/json")
+                w.Write(deleteLogResponseJSON)</span>
+
+        }
+}
+
+type DeleteResponse struct {
+        Success bool   `json:"success"`
+        Message string `json:"message,omitempty"`
+}
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">package handlers
+
+import (
+        "bytes"
+        "context"
+        "encoding/json"
+        "fmt"
+        "github.com/julienschmidt/httprouter"
+        "google.golang.org/protobuf/types/known/durationpb"
+        gen "http-service/gen"
+        "http-service/internal/app"
+        "http-service/internal/utils"
+        "io"
+        "net/http"
+        "reflect"
+        "time"
+)
+
+type CompositeResponse struct {
+        Success            bool                 `json:"success"`
+        Status             int                  `json:"status"`
+        Message            string               `json:"message"`
+        LogID              string               `json:"log_id,omitempty"`
+        ResultID           string               `json:"result_id,omitempty"`
+        LogError           string               `json:"log_error,omitempty"`
+        ProcessError       string               `json:"process_error,omitempty"`
+        Items              []*gen.VariableValue `json:"items,omitempty"`
+        ProcessingDuration string               `json:"processing_duration"`
+}
+
+func ProcessDataHandler(clients *app.Clients) httprouter.Handle <span class="cov8" title="1">{
+        return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) </span><span class="cov8" title="1">{
+                defer r.Body.Close()
+
+                if _, err := utils.ValidateHttpRequest(r); err != nil </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusBadRequest, CompositeResponse{
+                                Success: false,
+                                Status:  http.StatusBadRequest,
+                                Message: "Invalid requesst",
+                        })
+                        return
+                }</span>
+                <span class="cov8" title="1">body, err := io.ReadAll(r.Body)
+                if err != nil </span><span class="cov0" title="0">{
+                        writeJSON(w, http.StatusInternalServerError, CompositeResponse{
+                                Success: false,
+                                Status:  http.StatusInternalServerError,
+                                Message: "Failed to read request body",
+                        })
+                        return
+                }</span>
+                <span class="cov8" title="1">r.Body = io.NopCloser(bytes.NewBuffer(body))
+
+                resp := CompositeResponse{
+                        Success: true,
+                        Status:  http.StatusOK,
+                        Message: "Request received",
+                }
+
+                var reqLogID *gen.LogID
+                var logErr error
+
+                fmt.Println(clients.LogClient)
+
+                if !isNil(clients.LogClient) </span><span class="cov8" title="1">{
+                        fmt.Println("Мы внутри")
+                        reqLogID, logErr = logRequestData(r.Context(), r, clients)
+                        if reqLogID != nil </span><span class="cov8" title="1">{
+                                resp.LogID = reqLogID.GetId()
+                        }</span>
+                        <span class="cov8" title="1">if logErr != nil </span><span class="cov0" title="0">{
+                                resp.LogError = logErr.Error()
+                                resp.Message += ", FAILED to log"
+                        }</span> else<span class="cov8" title="1"> {
+                                resp.Message += ", SUCCESSFULLY logged"
+                        }</span>
+                } else<span class="cov8" title="1"> {
+                        resp.Message += ", Log service unavailable"
+                }</span>
+
+                <span class="cov8" title="1">var resBizID *gen.LogID
+                var items []*gen.VariableValue
+                var procErr error
+                var processingTime string
+                if !isNil(clients.BusinessClient) </span><span class="cov8" title="1">{
+                        resBizID, items, processingTime, procErr = processBusinessData(r.Context(), body, clients, reqLogID)
+                        if resBizID != nil </span><span class="cov8" title="1">{
+                                resp.ResultID = resBizID.GetId()
+                        }</span>
+                        <span class="cov8" title="1">if procErr != nil </span><span class="cov8" title="1">{
+                                resp.ProcessError = procErr.Error()
+                                resp.Message += ", FAILED processing"
+                        }</span> else<span class="cov8" title="1"> {
+                                resp.Items = items
+                                resp.Message += ", SUCCESSFUL processing"
+                                resp.ProcessingDuration = processingTime
+                        }</span>
+                } else<span class="cov8" title="1"> {
+                        resp.Message += ", Business service unavailable"
+                }</span>
+
+                <span class="cov8" title="1">if clients.LogClient == nil &amp;&amp; clients.BusinessClient == nil </span><span class="cov8" title="1">{
+                        resp.Success = false
+                        resp.Status = http.StatusServiceUnavailable
+                        resp.Message = "Both Log and Business services unavailable"
+                        writeJSON(w, http.StatusServiceUnavailable, resp)
+                        return
+                }</span>
+
+                <span class="cov8" title="1">writeJSON(w, http.StatusOK, resp)</span>
+
+        }
+}
+
+func FormatDuration(d *durationpb.Duration) string <span class="cov8" title="1">{
+        // Преобразуем protobuf Duration в time.Duration
+        td := d.AsDuration()
+
+        if td &lt; time.Microsecond </span><span class="cov0" title="0">{
+                return fmt.Sprintf("%d ns", td.Nanoseconds())
+        }</span> else<span class="cov8" title="1"> if td &lt; time.Millisecond </span><span class="cov0" title="0">{
+                return fmt.Sprintf("%.2f µs", float64(td.Nanoseconds())/1000)
+        }</span> else<span class="cov8" title="1"> if td &lt; time.Second </span><span class="cov8" title="1">{
+                return fmt.Sprintf("%.2f ms", float64(td.Microseconds())/1000)
+        }</span> else<span class="cov0" title="0"> {
+                return fmt.Sprintf("%.2fs", td.Seconds())
+        }</span>
+}
+
+func isNil(i interface{}) bool <span class="cov8" title="1">{
+        if i == nil </span><span class="cov8" title="1">{
+                return true
+        }</span>
+        <span class="cov8" title="1">switch v := reflect.ValueOf(i); v.Kind() </span>{
+        case reflect.Ptr, reflect.Interface, reflect.Slice, reflect.Map, reflect.Chan, reflect.Func:<span class="cov8" title="1">
+                return v.IsNil()</span>
+        }
+        <span class="cov0" title="0">return false</span>
+}
+
+func logRequestData(ctx context.Context, r *http.Request, client *app.Clients) (*gen.LogID, error) <span class="cov8" title="1">{
+
+        bodyBytes, err := io.ReadAll(r.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to read request body: %w", err)
+        }</span>
+        <span class="cov8" title="1">r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+        var reqParsed requestJSON
+        if err := json.Unmarshal(bodyBytes, &amp;reqParsed); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to unmarshal request body into operations: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">structured := &amp;gen.StructuredMessage{
+                Method: r.Method,
+                Path:   r.URL.Path,
+                Body:   make([]*gen.Operation, 0, len(reqParsed.Operations)),
+        }
+
+        for _, op := range reqParsed.Operations </span><span class="cov8" title="1">{
+
+                structured.Body = append(structured.Body, &amp;gen.Operation{
+                        Type:  op.Type,
+                        Op:    op.Op,
+                        Var:   op.Var,
+                        Left:  string(op.Left),
+                        Right: string(op.Right),
+                })
+        }</span>
+
+        <span class="cov8" title="1">entry := &amp;gen.LogEntry{
+                ServiceName: "HTTP-server",
+                Level:       "INFO",
+                Message:     structured,
+                Metadata: map[string]string{
+                        "method": r.Method,
+                        "path":   r.URL.Path,
+                },
+                TimestampSend: time.Now().UnixMilli(),
+        }
+
+        return client.LogClient.LogDataGRPC(ctx, entry)</span>
+}
+
+func processBusinessData(ctx context.Context, body []byte, clients *app.Clients, logID *gen.LogID) (resultID *gen.LogID,
+        results []*gen.VariableValue, processingTime string, err error) <span class="cov8" title="1">{
+
+        var reqParsed requestJSON
+        if err := json.Unmarshal(body, &amp;reqParsed); err != nil </span><span class="cov0" title="0">{
+                return nil, nil, "", fmt.Errorf("invalid JSON: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">converted := &amp;gen.OperationRequest{
+                LogID:      logID,
+                Operations: make([]*gen.Operation, 0, len(reqParsed.Operations)),
+        }
+
+        for _, op := range reqParsed.Operations </span><span class="cov8" title="1">{
+                converted.Operations = append(converted.Operations, &amp;gen.Operation{
+                        Type:  op.Type,
+                        Op:    op.Op,
+                        Var:   op.Var,
+                        Left:  string(op.Left),
+                        Right: string(op.Right),
+                })
+        }</span>
+
+        <span class="cov8" title="1">resp, err := clients.BusinessClient.Process(ctx, converted)
+        results = resp.GetItems()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, nil, "", fmt.Errorf("business logic error: %w", err)
+        }</span>
+        <span class="cov8" title="1">processingTime = FormatDuration(resp.GetProcessingTime())
+        return resp.LogID, results, processingTime, nil</span>
+}
+
+type requestJSON struct {
+        Operations []operationJSON `json:"operations"`
+}
+
+type operationJSON struct {
+        Type  string           `json:"type"`
+        Op    string           `json:"op"`
+        Var   string           `json:"var"`
+        Left  utils.FlexString `json:"left"`
+        Right utils.FlexString `json:"right"`
+}
+</pre>
+		
+		<pre class="file" id="file35" style="display: none">package handlers
+
+import (
+        "encoding/json"
+        "fmt"
+        "github.com/julienschmidt/httprouter"
+        gen "http-service/gen"
+        "http-service/internal/app"
+        "net/http"
+)
+
+func ReadLogHandler(clients *app.Clients) httprouter.Handle <span class="cov8" title="1">{
+        return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) </span><span class="cov8" title="1">{
+                id := r.URL.Query().Get("id")
+                filename := r.URL.Query().Get("filename")
+
+                if id == "" || filename == "" </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusBadRequest, "Missing query parameters: id and filename are required")
+                        return
+                }</span>
+
+                <span class="cov8" title="1">readLogResponse, err := clients.LogClient.ReadLogGRPC(id, filename)
+                if err != nil </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusInternalServerError, "Failed to retrieve log due to server mailfunction: "+err.Error())
+                        return
+                }</span>
+
+                <span class="cov8" title="1">if !readLogResponse.GetSuccess() </span><span class="cov8" title="1">{
+                        writeJSON(w, http.StatusInternalServerError, "Failed to retrive log: "+readLogResponse.GetError())
+                        return
+                }</span>
+
+                <span class="cov8" title="1">readLogResponseJSON, err := parseReadResponse(readLogResponse)
+                if err != nil </span><span class="cov0" title="0">{
+                        writeJSON(w, http.StatusInternalServerError, "Failed to marshal log: "+err.Error())
+                        return
+                }</span>
+
+                <span class="cov8" title="1">w.Header().Set("Content-Type", "application/json")
+                w.Write(readLogResponseJSON)</span>
+        }
+
+}
+
+func parseReadResponse(readLogResponse *gen.LogReadingResponse) ([]byte, error) <span class="cov8" title="1">{
+        if !readLogResponse.Success </span><span class="cov8" title="1">{
+                resp := ReadResponse{
+                        Success: false,
+                        Log:     LogEntry{},
+                        Error:   readLogResponse.Error,
+                }
+                return json.Marshal(resp)
+        }</span>
+
+        <span class="cov8" title="1">var logEntry LogEntry
+
+        err := json.Unmarshal([]byte(readLogResponse.Log), &amp;logEntry)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("failed to parse nested log entry: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">var parsedMessage interface{}
+        err = json.Unmarshal(logEntry.Message, &amp;parsedMessage)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to parse nested message JSON: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">type LogResponse struct {
+                Level             string      `json:"level"`
+                Msg               string      `json:"msg"`
+                Id                string      `json:"id"`
+                Message           interface{} `json:"message"`
+                Source            string      `json:"source"`
+                TimestampSend     int64       `json:"timestamp_send"`
+                TimestampReceived int64       `json:"timestamp_received"`
+                DeliveryDelayMs   string      `json:"deliveryDelayMs"`
+        }
+
+        response := struct {
+                Success bool        `json:"success"`
+                Log     LogResponse `json:"log,omitempty"`
+                Error   string      `json:"error,omitempty"`
+        }{
+                Success: true,
+                Log: LogResponse{
+                        Level:             logEntry.Level,
+                        Msg:               logEntry.Msg,
+                        Id:                logEntry.ID,
+                        Message:           parsedMessage,
+                        Source:            logEntry.Source,
+                        TimestampSend:     logEntry.TimestampSend,
+                        TimestampReceived: logEntry.TimestampRecv,
+                        DeliveryDelayMs:   logEntry.DeliveryDelayMs,
+                },
+        }
+
+        return json.Marshal(response)</span>
+}
+
+type ReadResponse struct {
+        Success bool     `json:"success"`
+        Log     LogEntry `json:"log,omitempty"`
+        Error   string   `json:"error,omitempty"`
+}
+</pre>
+		
+		<pre class="file" id="file36" style="display: none">package http
+
+import (
+        "github.com/julienschmidt/httprouter"
+        "github.com/swaggo/http-swagger"
+        _ "http-service/cmd/docs"
+        "http-service/internal/app"
+        handlers "http-service/internal/transport/http/handlers"
+        "net/http"
+)
+
+func NewRouter(app *app.Clients) *httprouter.Router <span class="cov0" title="0">{
+        router := httprouter.New()
+
+        router.POST("/process", handlers.ProcessDataHandler(app))
+        router.GET("/getLog", handlers.ReadLogHandler(app))
+        router.DELETE("/deleteLog", handlers.DeleteLogHandler(app))
+        router.GET("/swagger/*any", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) </span><span class="cov0" title="0">{
+                httpSwagger.WrapHandler.ServeHTTP(w, r)
+        }</span>)
+
+        <span class="cov0" title="0">return router</span>
+}
+</pre>
+		
+		<pre class="file" id="file37" style="display: none">package utils
+
+import (
+        "encoding/json"
+        "fmt"
+)
+
+type FlexString string
+
+func (fs *FlexString) UnmarshalJSON(data []byte) error <span class="cov0" title="0">{
+        if len(data) &gt; 0 &amp;&amp; data[0] == '"' </span><span class="cov0" title="0">{
+                var s string
+                if err := json.Unmarshal(data, &amp;s); err != nil </span><span class="cov0" title="0">{
+                        return fmt.Errorf("failed to parse string: %w", err)
+                }</span>
+                <span class="cov0" title="0">*fs = FlexString(s)
+                return nil</span>
+        }
+
+        <span class="cov0" title="0">var num json.Number
+        if err := json.Unmarshal(data, &amp;num); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to parse number: %w", err)
+        }</span>
+        <span class="cov0" title="0">*fs = FlexString(num.String())
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file38" style="display: none">package utils
+
+import (
+        "bytes"
+        "encoding/json"
+        "errors"
+        "fmt"
+        "io"
+        "net/http"
+)
+
+func ValidateHttpRequest(r *http.Request) ([]byte, error) <span class="cov8" title="1">{
+        if r.Method != http.MethodPost </span><span class="cov8" title="1">{
+                return nil, errors.New("only POST requests allowed")
+        }</span>
+
+        <span class="cov8" title="1">body, err := generalValidation(r)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return body, nil</span>
+}
+
+func generalValidation(r *http.Request) ([]byte, error) <span class="cov8" title="1">{
+        if r.ContentLength == 0 </span><span class="cov8" title="1">{
+                return nil, errors.New("request body is empty")
+        }</span>
+
+        <span class="cov8" title="1">if r.Header.Get("Content-Type") != "application/json" </span><span class="cov8" title="1">{
+                return nil, errors.New("Content-Type must be application/json")
+        }</span>
+
+        <span class="cov8" title="1">body, err := io.ReadAll(r.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to read request body: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">if len(body) == 0 </span><span class="cov0" title="0">{
+                return nil, errors.New("request body is empty")
+        }</span>
+
+        <span class="cov8" title="1">var tmp interface{}
+        if err := json.Unmarshal(body, &amp;tmp); err != nil </span><span class="cov8" title="1">{
+                return nil, errors.New("invalid JSON")
+        }</span>
+
+        <span class="cov8" title="1">r.Body = io.NopCloser(bytes.NewBuffer(body))
+
+        return body, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file39" style="display: none">package main
+
+import (
+        "context"
+        "log-service/internal/config"
+        "log-service/internal/logger/server"
+        "log-service/internal/signals"
+)
+
+func main() <span class="cov0" title="0">{
+        ctx, cancel := context.WithCancel(context.Background())
+        defer cancel()
+
+        cfg := config.Load()
+
+        server.RunLogServer(cfg)
+
+        signals.WaitForShutdown(ctx, cancel)
+}</span>
+</pre>
+		
+		<pre class="file" id="file40" style="display: none">package kafka
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+        "github.com/segmentio/kafka-go"
+        "google.golang.org/protobuf/proto"
+        "log"
+        "log-service/gen"
+        "log-service/internal/config"
+        "log-service/internal/logger/CRUD"
+        "strings"
+        "time"
+)
+
+func publishOperationResult(broker, topic string, payload []byte) <span class="cov0" title="0">{
+        writer := NewKafkaWriter(broker, topic)
+
+        ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+        defer cancel()
+
+        err := writer.WriteMessages(ctx, kafka.Message{
+                Key:   []byte("operation"),
+                Value: payload,
+        })
+
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to publish operation: %v\n", err)
+        }</span> else<span class="cov0" title="0"> {
+                log.Println("Operation send successfully.")
+        }</span>
+
+        <span class="cov0" title="0">writer.Close()</span>
+
+}
+
+func StartKafka(ch chan *gen.LogEntry) <span class="cov0" title="0">{
+
+        cfg := config.Load()
+
+        file, err := CRUD.OpenFile("http_logs.json")
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println("Failed to open file: ", err)
+        }</span>
+        <span class="cov0" title="0">for msg := range ch </span><span class="cov0" title="0">{
+                log, err := CRUD.FindLog(file, msg.Message.Path)
+                if err != nil </span><span class="cov0" title="0">{
+                        fmt.Println("Failed to fing log: ", err)
+                }</span>
+
+                <span class="cov0" title="0">operations, err := extractOperations(log)
+                result := msg.Message.Result
+
+                payload, err := proto.Marshal(&amp;gen.StructuredMessage{
+                        Method: "POST",
+                        Path:   "from log-service",
+                        Body:   operations,
+                        Result: result,
+                })
+                publishOperationResult(cfg.KafkaBroker, cfg.KafkaTopic, payload)</span>
+        }
+}
+
+func extractBody(log string) string <span class="cov0" title="0">{
+        start := strings.Index(log, `"body":[`)
+        if start == -1 </span><span class="cov0" title="0">{
+                fmt.Println("body not found")
+                return ""
+        }</span>
+        <span class="cov0" title="0">start += len(`"body":`)
+
+        // Ищем закрывающую скобку после начала
+        end := start
+        brackets := 1 // уже встретили первую [
+        for i := start + 1; i &lt; len(log); i++ </span><span class="cov0" title="0">{
+                switch log[i] </span>{
+                case '[':<span class="cov0" title="0">
+                        brackets++</span>
+                case ']':<span class="cov0" title="0">
+                        brackets--
+                        if brackets == 0 </span><span class="cov0" title="0">{
+                                end = i + 1
+                                break</span>
+                        }
+                }
+        }
+
+        <span class="cov0" title="0">bodyRaw := log[start:end]
+        return bodyRaw</span>
+}
+
+func extractOperations(log string) ([]*gen.Operation, error) <span class="cov0" title="0">{
+        bodyJson := extractBody(log)
+        if bodyJson == "" </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("body not found")
+        }</span>
+
+        <span class="cov0" title="0">var ops []*gen.Operation
+        if err := json.Unmarshal([]byte(bodyJson), &amp;ops); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return ops, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file41" style="display: none">package kafka
+
+import "github.com/segmentio/kafka-go"
+
+func NewKafkaWriter(broker, topic string) *kafka.Writer <span class="cov0" title="0">{
+        return &amp;kafka.Writer{
+                Addr:         kafka.TCP(broker),
+                Topic:        topic,
+                Balancer:     &amp;kafka.LeastBytes{},
+                RequiredAcks: kafka.RequireAll,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file42" style="display: none">package config
+
+import (
+        "github.com/joho/godotenv"
+        "log"
+        "os"
+)
+
+type Config struct {
+        LoggerAddr  string
+        LogsDir     string
+        KafkaBroker string
+        KafkaTopic  string
+}
+
+func Load() *Config <span class="cov0" title="0">{
+
+        if err := godotenv.Load(); err != nil </span><span class="cov0" title="0">{
+                log.Println("No .env file found — assuming prod environment")
+        }</span>
+
+        <span class="cov0" title="0">return &amp;Config{
+                LoggerAddr:  os.Getenv("LOGGER_ADDR"),
+                LogsDir:     os.Getenv("LOGS_DIR"),
+                KafkaBroker: os.Getenv("KAFKA_BROKER"),
+                KafkaTopic:  os.Getenv("KAFKA_TOPIC"),
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file43" style="display: none">package CRUD
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+        "go.uber.org/zap"
+        "google.golang.org/protobuf/encoding/protojson"
+        "log"
+        "log-service/gen"
+        "log-service/internal/utils"
+        "time"
+)
+
+type LogManager struct {
+        gen.UnimplementedLoggerServer
+        Loggers   map[string]*zap.Logger
+        LogChanel chan *gen.LogEntry
+}
+
+func (lm *LogManager) HandleIncomingLog(ctx context.Context, entry *gen.LogEntry) (*gen.LogCreationResponse, error) <span class="cov0" title="0">{
+        select </span>{
+        case &lt;-ctx.Done():<span class="cov0" title="0">
+                return nil, ctx.Err()</span>
+        default:<span class="cov0" title="0"></span>
+        }
+
+        <span class="cov0" title="0">id := gen.LogID{Id: utils.GenerateID(10)}
+        logger, ok := lm.Loggers[entry.ServiceName]
+        if !ok </span><span class="cov0" title="0">{
+                logger = lm.Loggers["undefined-server"]
+        }</span>
+
+        <span class="cov0" title="0">WriteLogToFile(logger, entry.GetLevel(), id.GetId(), entry, lm.LogChanel)
+
+        _ = logger.Sync()
+
+        return &amp;gen.LogCreationResponse{Id: &amp;id}, nil</span>
+
+}
+
+func WriteLogToFile(logger *zap.Logger, level string, id string, entry *gen.LogEntry, logChan chan *gen.LogEntry) <span class="cov8" title="1">{
+
+        sendTs := entry.TimestampSend
+        receiveTs := time.Now().UnixMilli()
+        delay := float64(receiveTs - sendTs)
+
+        formattedDelay := fmt.Sprintf("%.3f ms", delay)
+
+        msgJSON, err := protojson.Marshal(entry.Message)
+        if err != nil </span><span class="cov0" title="0">{
+                msgJSON = []byte(fmt.Sprintf(`"error serializing message: %v"`, err))
+        }</span>
+
+        <span class="cov8" title="1">logFields := []zap.Field{
+                zap.String("id", id),
+                zap.Any("message", json.RawMessage(msgJSON)),
+                zap.String("path", entry.Message.GetPath()),
+                zap.String("source", entry.ServiceName),
+                zap.Int64("timestamp_send", sendTs),
+                zap.Int64("timestamp_received", receiveTs),
+                zap.String("deliveryDelayMs", formattedDelay),
+        }
+
+        switch level </span>{
+        case "debug":<span class="cov8" title="1">
+                logger.Debug("New log entry", logFields...)</span>
+        case "info":<span class="cov8" title="1">
+                logger.Info("New log entry", logFields...)</span>
+        case "warn":<span class="cov8" title="1">
+                logger.Warn("New log entry", logFields...)</span>
+        case "error":<span class="cov8" title="1">
+                logger.Error("New log entry", logFields...)</span>
+        default:<span class="cov8" title="1">
+                logger.Info("New log entry", logFields...)</span>
+        }
+
+        <span class="cov8" title="1">if entry.ServiceName == "business-server" </span><span class="cov8" title="1">{
+                select </span>{
+                case logChan &lt;- entry:<span class="cov8" title="1">
+                        fmt.Printf("Log %s successfully send to chanel\n", id)</span>
+                default:<span class="cov8" title="1">
+                        log.Println("LogChanel is full, dropping message")</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file44" style="display: none">package CRUD
+
+import (
+        "bufio"
+        "context"
+        "encoding/json"
+        "fmt"
+        "log-service/gen"
+        "path/filepath"
+
+        "os"
+        "strings"
+)
+
+func (*LogManager) DeleteLog(ctx context.Context, logInfo *gen.LogInfo) (*gen.LogDeletionResponse, error) <span class="cov8" title="1">{
+        filename := logInfo.GetFilename()
+        id := logInfo.GetId()
+
+        filePath := filepath.Join("../log_files/", filename)
+
+        file, err := OpenFile(filename)
+        if err != nil </span><span class="cov8" title="1">{
+                return writeWrongDeleteResponse("failed to open file: " + err.Error()), nil
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        lines, err := readLines(file)
+        if err != nil </span><span class="cov0" title="0">{
+                return writeWrongDeleteResponse("failed to scan file: " + ": " + err.Error()), nil
+        }</span>
+
+        <span class="cov8" title="1">updatedLines, err := updateLines(lines, id)
+        if err != nil </span><span class="cov8" title="1">{
+                return writeWrongDeleteResponse(err.Error()), nil
+        }</span>
+
+        <span class="cov8" title="1">err = rewriteFile(filePath, updatedLines)
+        if err != nil </span><span class="cov0" title="0">{
+                return writeWrongDeleteResponse("failed to overwrite file: " + err.Error()), nil
+        }</span>
+
+        <span class="cov8" title="1">return &amp;gen.LogDeletionResponse{
+                Success: true,
+                Message: "Log with id " + id + " successfully deleted from " + filename}, nil</span>
+
+}
+
+func writeWrongDeleteResponse(err string) *gen.LogDeletionResponse <span class="cov8" title="1">{
+        return &amp;gen.LogDeletionResponse{
+                Success: false,
+                Message: err,
+        }
+}</span>
+
+func readLines(file *os.File) ([]string, error) <span class="cov8" title="1">{
+
+        var lines []string
+        scanner := bufio.NewScanner(file)
+        for scanner.Scan() </span><span class="cov8" title="1">{
+                lines = append(lines, scanner.Text())
+        }</span>
+        <span class="cov8" title="1">return lines, scanner.Err()</span>
+}
+
+func updateLines(lines []string, id string) (updatedLines []string, err error) <span class="cov8" title="1">{
+        var found bool
+
+        for _, line := range lines </span><span class="cov8" title="1">{
+                var entry map[string]any
+                if err := json.Unmarshal([]byte(line), &amp;entry); err != nil </span><span class="cov8" title="1">{
+                        updatedLines = append(updatedLines, line)
+                        continue</span>
+                }
+                <span class="cov8" title="1">if entryID, ok := entry["id"].(string); ok &amp;&amp; entryID == id </span><span class="cov8" title="1">{
+                        found = true
+                        continue</span>
+                }
+                <span class="cov8" title="1">updatedLines = append(updatedLines, line)</span>
+        }
+        <span class="cov8" title="1">if !found </span><span class="cov8" title="1">{
+                err = fmt.Errorf("log with id %s not found", id)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return updatedLines, err</span>
+}
+
+func rewriteFile(filePath string, updatedLines []string) (err error) <span class="cov8" title="1">{
+        err = os.WriteFile(filePath, []byte(strings.Join(updatedLines, "\n")+"\n"), 0644)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file45" style="display: none">package CRUD
+
+import (
+        "bufio"
+        "context"
+        "encoding/json"
+        "fmt"
+        "log-service/gen"
+        "os"
+        "path/filepath"
+)
+
+func (*LogManager) ReadLog(ctx context.Context, logInfo *gen.LogInfo) (*gen.LogReadingResponse, error) <span class="cov8" title="1">{
+
+        filename := logInfo.GetFilename()
+
+        file, err := OpenFile(filename)
+        if err != nil </span><span class="cov8" title="1">{
+                return writeWrongReadResponse("failed to open file", err), nil
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        log, err := FindLog(file, logInfo.GetId())
+        if err != nil </span><span class="cov8" title="1">{
+                return writeWrongReadResponse(fmt.Sprintf("failed to find log in %s", filename), err), nil
+        }</span>
+
+        <span class="cov8" title="1">return &amp;gen.LogReadingResponse{
+                Success: true,
+                Log:     log,
+                Error:   "",
+        }, nil</span>
+
+}
+
+func OpenFile(filename string) (file *os.File, err error) <span class="cov8" title="1">{
+        filePath := filepath.Join("../log_files/", filename)
+        file, err = os.Open(filePath)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return file, nil</span>
+}
+
+func FindLog(file *os.File, id string) (log string, err error) <span class="cov8" title="1">{
+        scanner := bufio.NewScanner(file)
+        for scanner.Scan() </span><span class="cov8" title="1">{
+                line := scanner.Text()
+
+                var logId struct {
+                        ID string `json:"id"`
+                }
+
+                if err := json.Unmarshal([]byte(line), &amp;logId); err != nil </span><span class="cov8" title="1">{
+                        continue</span> // Пропускаем невалидные JSON строки
+                }
+
+                <span class="cov8" title="1">if logId.ID == id </span><span class="cov8" title="1">{
+                        return line, nil
+                }</span>
+        }
+
+        <span class="cov8" title="1">if err := scanner.Err(); err != nil </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("error while scanning file: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">return "", fmt.Errorf("log with id %s not found", id)</span>
+}
+func writeWrongReadResponse(msg string, err error) *gen.LogReadingResponse <span class="cov8" title="1">{
+        var errMsg string
+        if err != nil </span><span class="cov8" title="1">{
+                errMsg = fmt.Sprintf("%s: %s", msg, err.Error())
+        }</span> else<span class="cov8" title="1"> {
+                errMsg = msg
+        }</span>
+
+        <span class="cov8" title="1">return &amp;gen.LogReadingResponse{
+                Success: false,
+                Error:   errMsg,
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file46" style="display: none">package server
+
+import (
+        "go.uber.org/zap"
+        "go.uber.org/zap/zapcore"
+        "log"
+        "log-service/gen"
+        "log-service/internal/config"
+        lm "log-service/internal/logger/CRUD"
+        "os"
+)
+
+func NewLogManager(cfg *config.Config) *lm.LogManager <span class="cov0" title="0">{
+        return &amp;lm.LogManager{
+                Loggers: map[string]*zap.Logger{
+                        "HTTP-server":      createLogger("http", cfg),
+                        "business-server":  createLogger("business", cfg),
+                        "undefined-server": createLogger("undefined", cfg),
+                },
+                LogChanel: make(chan *gen.LogEntry, 500),
+        }
+}</span>
+
+func createLogger(serviceName string, cfg *config.Config) *zap.Logger <span class="cov0" title="0">{
+        cfgZap := zap.NewProductionEncoderConfig()
+        cfgZap.TimeKey = ""
+        encoder := zapcore.NewJSONEncoder(cfgZap)
+
+        logDir := cfg.LogsDir
+
+        if err := os.MkdirAll(logDir, 0755); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to create log directory: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">logFile, _ := os.OpenFile(logDir+"/"+serviceName+"_logs.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+        core := zapcore.NewCore(encoder, zapcore.AddSync(logFile), zapcore.DebugLevel)
+        return zap.New(core)</span>
+}
+</pre>
+		
+		<pre class="file" id="file47" style="display: none">package server
+
+import (
+        "google.golang.org/grpc"
+        "log"
+        "log-service/gen"
+        "log-service/internal/clients/kafka"
+        "log-service/internal/config"
+        "net"
+)
+
+func RunLogServer(cfg *config.Config) <span class="cov0" title="0">{
+        lis, err := net.Listen("tcp", cfg.LoggerAddr)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to listen: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">log.Printf("Starting log server on :%s", cfg.LoggerAddr)
+
+        logManager := NewLogManager(cfg)
+
+        go kafka.StartKafka(logManager.LogChanel)
+
+        if err := StartGRPCServer(lis, logManager); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("failed to serve: %v", err)
+        }</span>
+}
+
+func StartGRPCServer(listener net.Listener, loggerServer gen.LoggerServer) error <span class="cov0" title="0">{
+        s := grpc.NewServer()
+        gen.RegisterLoggerServer(s, loggerServer)
+        return s.Serve(listener)
+}</span>
+</pre>
+		
+		<pre class="file" id="file48" style="display: none">package signals
+
+import (
+        "context"
+        "os"
+        "os/signal"
+        "syscall"
+)
+
+func WaitForShutdown(ctx context.Context, cancel context.CancelFunc) <span class="cov0" title="0">{
+        sig := make(chan os.Signal, 1)
+
+        signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+
+        select </span>{
+        case s := &lt;-sig:<span class="cov0" title="0">
+                println("Получен сигнал:", s.String())
+                cancel()</span>
+        case &lt;-ctx.Done():<span class="cov0" title="0">
+                return</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file49" style="display: none">package utils
+
+import "math/rand"
+
+func GenerateID(logLength int) string <span class="cov8" title="1">{
+        const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        logLengthBytes := make([]rune, logLength)
+        for i := range logLengthBytes </span><span class="cov8" title="1">{
+                logLengthBytes[i] = rune(letters[rand.Intn(len(letters))])
+        }</span>
+        <span class="cov8" title="1">return string(logLengthBytes)</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
